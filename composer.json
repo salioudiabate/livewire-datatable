@@ -1,0 +1,71 @@
+{
+    "name": "salioudiabate/livewire-datatable",
+    "description": "A professional, multi-datasource Livewire DataTable for Laravel — Eloquent, Query Builder, raw SQL, and plain arrays/Collections behind one fluent API.",
+    "keywords": [
+        "laravel",
+        "livewire",
+        "datatable",
+        "table",
+        "eloquent",
+        "query-builder"
+    ],
+    "homepage": "https://github.com/salioudiabate/livewire-datatable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Saliou Diabate",
+            "email": "saliou.diiabate@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "livewire/livewire": "^4.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.9|^11.0",
+        "pestphp/pest": "^4.3",
+        "pestphp/pest-plugin-laravel": "^4.1",
+        "pestphp/pest-plugin-livewire": "^4.1"
+    },
+    "suggest": {
+        "maatwebsite/excel": "Required to use an Excel exporter instead of the built-in CSV exporter (see the README's Export section for a drop-in ExcelExporter recipe)."
+    },
+    "autoload": {
+        "psr-4": {
+            "Salioudiabate\\LivewireDatatable\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Salioudiabate\\LivewireDatatable\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test-coverage": "pest --coverage",
+        "analyse": "phpstan analyse",
+        "format": "pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Salioudiabate\\LivewireDatatable\\LivewireDataTableServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

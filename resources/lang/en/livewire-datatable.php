@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'search' => 'Search...',
+    'all' => 'All',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'range_separator' => 'to',
+    'pagination' => 'Pagination',
+    'previous' => 'Previous',
+    'next' => 'Next',
+    'goto_page' => 'Go to page :page',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+    'filters' => 'Filters',
+    'reset_filters' => 'Reset filters',
+    'no_results' => 'No results found',
+    'no_results_hint' => 'Try adjusting your search or filter criteria.',
+    'per_page' => 'Per page',
+    'render_error' => 'This table could not be loaded.',
+    'selected_count' => ':count selected',
+    'page_selected' => ':count selected on this page.',
+    'select_all_filtered' => 'Select all :count results',
+    'all_filtered_selected' => 'All :count results are selected.',
+    'clear_selection' => 'Clear selection',
+    'columns' => 'Columns',
+    'export' => 'Export',
+];

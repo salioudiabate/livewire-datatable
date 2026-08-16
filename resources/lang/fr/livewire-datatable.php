@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'search' => 'Rechercher...',
+    'all' => 'Tous',
+    'yes' => 'Oui',
+    'no' => 'Non',
+    'range_separator' => 'à',
+    'pagination' => 'Pagination',
+    'previous' => 'Précédent',
+    'next' => 'Suivant',
+    'goto_page' => 'Aller à la page :page',
+    'showing' => 'Affichage de',
+    'to' => 'à',
+    'of' => 'sur',
+    'results' => 'résultats',
+    'filters' => 'Filtres',
+    'reset_filters' => 'Réinitialiser les filtres',
+    'no_results' => 'Aucun résultat trouvé',
+    'no_results_hint' => 'Essayez de modifier vos critères de recherche ou de filtrage.',
+    'per_page' => 'Par page',
+    'render_error' => "Ce tableau n'a pas pu être chargé.",
+    'selected_count' => ':count sélectionné(s)',
+    'page_selected' => ':count sélectionné(s) sur cette page.',
+    'select_all_filtered' => 'Sélectionner les :count résultats',
+    'all_filtered_selected' => 'Les :count résultats sont sélectionnés.',
+    'clear_selection' => 'Effacer la sélection',
+    'columns' => 'Colonnes',
+    'export' => 'Exporter',
+];
