@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+{{ builderImport }}use Salioudiabate\LivewireDatatable\Column;
+use Salioudiabate\LivewireDatatable\DataTableComponent;
+use Salioudiabate\LivewireDatatable\Filters\TextFilter;
+
+class {{ class }} extends DataTableComponent
+{
+    public function builder(): {{ builderReturnType }}
+    {
+        {{ builderComment }}return {{ builderBody }};
+    }
+
+    public function columns(): array
+    {
+        return [
+            Column::make('Name', 'name')->searchable()->sortable(),
+            Column::make('Created', 'created_at')->sortable()
+                ->format(fn ($value) => $value->format('d/m/Y')),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            TextFilter::make('Name', 'name'),
+        ];
+    }
+}

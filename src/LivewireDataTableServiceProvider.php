@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salioudiabate\LivewireDatatable;
 
 use Illuminate\Pagination\Paginator;
+use Salioudiabate\LivewireDatatable\Console\Commands\MakeDataTableCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -16,7 +17,8 @@ class LivewireDataTableServiceProvider extends PackageServiceProvider
             ->name('livewire-datatable')
             ->hasConfigFile('livewire-datatable')
             ->hasViews('livewire-datatable')
-            ->hasTranslations();
+            ->hasTranslations()
+            ->hasCommand(MakeDataTableCommand::class);
     }
 
     public function packageBooted(): void
