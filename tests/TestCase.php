@@ -7,6 +7,7 @@ namespace Salioudiabate\LivewireDatatable\Tests;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Livewire\LivewireServiceProvider;
+use Maatwebsite\Excel\ExcelServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Salioudiabate\LivewireDatatable\LivewireDataTableServiceProvider;
 
@@ -23,6 +24,7 @@ class TestCase extends Orchestra
     {
         return [
             LivewireServiceProvider::class,
+            ExcelServiceProvider::class,
             LivewireDataTableServiceProvider::class,
         ];
     }

@@ -377,33 +377,26 @@ protected function exportFilename(): string
 }
 ```
 
-Want Excel instead of CSV? Implement `Salioudiabate\LivewireDatatable\Export\Exporter` (`composer require maatwebsite/excel` first) and return it from `exporter()`:
+Want Excel instead of CSV? `Salioudiabate\LivewireDatatable\Export\ExcelExporter` ships with the package (built on [maatwebsite/excel](https://github.com/SpartnerNL/Laravel-Excel), an optional dependency — `composer require maatwebsite/excel` first). Return it from `exporter()`, and give the file an Excel-recognized extension in `exportFilename()`:
 
 ```php
-use Salioudiabate\LivewireDatatable\Column;
-use Salioudiabate\LivewireDatatable\DataSources\DataSource;
+use Salioudiabate\LivewireDatatable\Export\ExcelExporter;
 use Salioudiabate\LivewireDatatable\Export\Exporter;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ExcelExporter implements Exporter
-{
-    public function export(DataSource $dataSource, array $columns, string $filename): StreamedResponse
-    {
-        // Build a maatwebsite/excel FromCollection/WithHeadings export from
-        // $dataSource->paginate(...)/$dataSource->raw() and return
-        // Excel::download(...)->getContent() wrapped in a StreamedResponse,
-        // or use Excel::download() directly if you don't need to reuse the
-        // base export() action signature.
-    }
-}
-```
-
-```php
 protected function exporter(): Exporter
 {
     return new ExcelExporter();
 }
+
+protected function exportFilename(): string
+{
+    return 'users-'.now()->format('Y-m-d').'.xlsx';
+}
 ```
+
+It reads the DataSource in the same chunked fashion as `CsvExporter` (never a single `get()`-everything call), and honors `Column::exportUsing()`/`exportValue()` identically. Note this bounds *read* memory only — the XLSX format itself isn't row-streamable, so PhpSpreadsheet still holds the workbook in memory while writing it. For very large exports, prefer CSV.
+
+Need a different format entirely? Implement `Exporter` yourself and return it from `exporter()` — its `export()` method returns a Symfony `Response`, so anything from a streamed CSV to a full file download works.
 
 ## Row actions
 

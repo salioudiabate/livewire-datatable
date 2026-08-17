@@ -9,7 +9,7 @@ use Salioudiabate\LivewireDatatable\Column;
 use Salioudiabate\LivewireDatatable\DataSources\DataSource;
 use Salioudiabate\LivewireDatatable\Export\CsvExporter;
 use Salioudiabate\LivewireDatatable\Export\Exporter;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Exports the current filtered view (search + filters applied, matching
@@ -30,7 +30,7 @@ trait HasExport
         return true;
     }
 
-    public function export(): StreamedResponse
+    public function export(): Response
     {
         return $this->exporter()->export(
             $this->filteredDataSource(),
