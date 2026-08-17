@@ -325,7 +325,9 @@ A generic, permission-gated bulk delete is built in — opt in by overriding `de
 ```php
 public function bulkActions(): array
 {
-    return [BulkAction::make('destroySelected', 'Delete')];
+    return [
+        BulkAction::make('destroySelected', 'Delete')->permission('delete-users'),
+    ];
 }
 
 protected function deletePermission(): ?string
@@ -345,6 +347,8 @@ protected function afterDelete(mixed $row): void
 ```
 
 Rows are deleted one at a time rather than a single mass `DELETE` — on Eloquent this preserves model events/observers, and on both Eloquent and Query Builder it means one row blocked by a foreign key constraint doesn't abort the rest of the batch (the failure is reported back via `reportDeletionSummary(DeletionSummary $summary)`, which you can override to flash a message through your app's own alert system). Bulk delete is only available when the resolved data source is Eloquent or Query Builder — it's not meaningful for a raw-SQL or array-backed table.
+
+> **Two separate checks, set them to the same permission.** `deletePermission()` gates the actual deletion (re-checked server-side on every call, so it's safe on its own) — but the `BulkAction` itself needs its *own* matching `->permission()` too, otherwise the selection checkboxes and delete button still render for everyone, even users who would get a 403 the moment they click. The two are deliberately independent (a `BulkAction` can be permission-gated without going through `destroySelected()` at all), so nothing wires them together automatically.
 
 ## Column visibility
 
