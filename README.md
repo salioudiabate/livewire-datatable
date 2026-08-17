@@ -501,9 +501,20 @@ Or return an instance implementing `DataSource` directly from `builder()` — it
 ## Testing
 
 ```bash
-composer test        # Pest
+composer test        # Pest (Unit, Feature, Arch)
 composer analyse      # Larastan (level 8)
 composer format        # Pint
+```
+
+Architecture invariants documented throughout this README (final adapters, traits-not-classes, etc.) are enforced by Pest `arch()` tests, run as part of `composer test`.
+
+A real-browser smoke test suite also exists under `tests/Browser`, driven by [Pest 4's browser testing](https://pestphp.com/docs/browser-testing) (Playwright) against the shipped Blade views and a real `DataTableComponent`: typing into search, clicking to sort, selecting a filter, paginating, and checking a row all get exercised in an actual Chromium page. It's opt-in — not part of `composer test` — since it needs Node and a downloaded Chromium build:
+
+```bash
+npm install
+npx playwright install chromium
+
+composer test-browser
 ```
 
 ## Credits

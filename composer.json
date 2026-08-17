@@ -32,6 +32,7 @@
         "laravel/pint": "^1.18",
         "orchestra/testbench": "^10.9|^11.0",
         "pestphp/pest": "^4.3",
+        "pestphp/pest-plugin-browser": "^4.0",
         "pestphp/pest-plugin-laravel": "^4.1",
         "pestphp/pest-plugin-livewire": "^4.1"
     },
@@ -51,6 +52,7 @@
     "scripts": {
         "test": "pest",
         "test-coverage": "pest --coverage",
+        "test-browser": "pest tests/Browser",
         "analyse": "phpstan analyse",
         "format": "pint"
     },

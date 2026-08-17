@@ -1,0 +1,9 @@
+{
+  "name": "livewire-datatable",
+  "private": true,
+  "description": "Playwright browser driver for the Pest 4 browser tests.",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
