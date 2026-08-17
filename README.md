@@ -144,6 +144,14 @@ class UsersTable extends DataTableComponent
 
 That's it — `<livewire:users-table />` renders a searchable, sortable, paginated table. Everything else in this README is opt-in.
 
+Or scaffold the class above with `make:datatable`:
+
+```bash
+php artisan make:datatable UsersTable --model=User
+```
+
+Omit `--model` for a generic `builder(): mixed` stub instead of a typed Eloquent one — useful when starting from a Query Builder, raw SQL, or array/Collection table. `--force` overwrites an existing file; nested namespaces work via slashes (`make:datatable Admin/UsersTable`).
+
 ## Data sources
 
 `builder()` may return any of the following; the right `DataSource` adapter is picked automatically.
