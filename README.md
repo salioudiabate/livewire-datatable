@@ -58,6 +58,7 @@ class UsersTable extends DataTableComponent
 - [Translations](#translations)
 - [Extending to a custom data source](#extending-to-a-custom-data-source)
 - [Testing](#testing)
+- [Security](#security)
 - [Credits](#credits)
 - [License](#license)
 
@@ -516,6 +517,10 @@ npx playwright install chromium
 
 composer test-browser
 ```
+
+## Security
+
+If you discover a security vulnerability, please don't open a public issue — see [SECURITY.md](SECURITY.md) for how to report it privately.
 
 ## Credits
 
