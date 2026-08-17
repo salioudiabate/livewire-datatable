@@ -38,6 +38,10 @@ final class Column
 
     private bool $visibleByDefault = true;
 
+    private bool $frozen = false;
+
+    private ?int $width = null;
+
     public function __construct(
         private readonly string $label,
         private readonly string $field,
@@ -127,6 +131,22 @@ final class Column
         return $this;
     }
 
+    /**
+     * Pins this column in place while the rest of a wide table scrolls
+     * horizontally. Requires an explicit pixel $width: there's no way to
+     * measure a rendered column's actual width from PHP, and computing a
+     * frozen column's sticky offset needs the widths of every frozen column
+     * before it. Frozen columns must form a leading, contiguous run of
+     * columns() — see Concerns\HasFrozenColumns.
+     */
+    public function frozen(int $width): static
+    {
+        $this->frozen = true;
+        $this->width = $width;
+
+        return $this;
+    }
+
     public function getLabel(): string
     {
         return $this->label;
@@ -190,6 +210,16 @@ final class Column
     public function isVisibleByDefault(): bool
     {
         return $this->visibleByDefault;
+    }
+
+    public function isFrozen(): bool
+    {
+        return $this->frozen;
+    }
+
+    public function getWidth(): ?int
+    {
+        return $this->width;
     }
 
     public function renderValue(mixed $value, mixed $row): mixed

@@ -53,11 +53,59 @@ return [
         'table_wrapper' => 'overflow-x-auto rounded-xl border border-slate-200 bg-white',
         'table' => 'min-w-full divide-y divide-slate-200 text-sm',
         'thead_tr' => 'bg-slate-50',
-        'th' => 'px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500',
+        // Vertical padding is deliberately absent here — it's density-driven
+        // (see 'density' below) and composed onto these in the header/body
+        // row views, the same way column-specific classes are composed.
+        'th' => 'text-left text-xs font-semibold uppercase tracking-wide text-slate-500',
         'tbody_tr' => 'divide-y divide-slate-100 bg-white',
-        'td' => 'px-4 py-3 text-slate-700',
+        'td' => 'text-slate-700',
         'pagination_wrapper' => 'flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between',
+
+        // Used only by frozen (Column::frozen()) columns and the selection
+        // checkbox column when at least one column is frozen: an opaque
+        // background so scrolled-under content doesn't bleed through a
+        // sticky cell, and a right-edge shadow on the last frozen column.
+        'frozen_thead_bg' => 'bg-slate-50',
+        'frozen_tbody_bg' => 'bg-white',
+        'frozen_edge' => 'shadow-[2px_0_4px_-2px_rgba(0,0,0,0.15)]',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Row density
+    |--------------------------------------------------------------------------
+    |
+    | Vertical (and, for compact, horizontal) padding per density mode,
+    | selectable at runtime via the toolbar's density toggle. Overridable
+    | globally here, or per-table via Concerns\HasDensity's
+    | densityThClasses()/densityTdClasses().
+    |
+    */
+    'density' => [
+        'default' => 'comfortable',
+        'th' => [
+            'compact' => 'px-3 py-1.5',
+            'comfortable' => 'px-4 py-3',
+            'spacious' => 'px-5 py-4',
+        ],
+        'td' => [
+            'compact' => 'px-3 py-1.5',
+            'comfortable' => 'px-4 py-3',
+            'spacious' => 'px-5 py-4',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Frozen columns
+    |--------------------------------------------------------------------------
+    |
+    | Reserved pixel width for the selection checkbox column, used to offset
+    | frozen (Column::frozen()) data columns so they don't render underneath
+    | it. Only relevant when bulk actions/selection are enabled.
+    |
+    */
+    'frozen_checkbox_width' => 44,
 
     /*
     |--------------------------------------------------------------------------

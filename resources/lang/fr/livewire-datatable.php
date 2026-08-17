@@ -29,4 +29,8 @@ return [
     'clear_selection' => 'Effacer la sélection',
     'columns' => 'Colonnes',
     'export' => 'Exporter',
+    'density' => 'Densité des lignes',
+    'density_compact' => 'Compact',
+    'density_comfortable' => 'Confortable',
+    'density_spacious' => 'Spacieux',
 ];

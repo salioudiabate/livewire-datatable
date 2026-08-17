@@ -31,11 +31,18 @@ trait HandlesRenderErrors
 
     abstract public function rows(): mixed;
 
+    /**
+     * @param  array<int, Column>  $columns
+     */
+    abstract public function assertValidFrozenColumns(array $columns): void;
+
     protected function renderTable(): View
     {
         try {
             $columns = $this->visibleColumns();
             $filters = $this->filters();
+
+            $this->assertValidFrozenColumns($columns);
 
             // rows() is #[Computed] (memoized): forcing it here means a
             // failure in builder()/columns() surfaces inside this try block

@@ -29,4 +29,8 @@ return [
     'clear_selection' => 'Clear selection',
     'columns' => 'Columns',
     'export' => 'Export',
+    'density' => 'Row density',
+    'density_compact' => 'Compact',
+    'density_comfortable' => 'Comfortable',
+    'density_spacious' => 'Spacious',
 ];

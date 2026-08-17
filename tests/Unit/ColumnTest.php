@@ -83,3 +83,17 @@ it('merges an extra class onto the header cell', function () {
 
     expect($column->getThClass())->toBe('text-right');
 });
+
+it('is not frozen by default', function () {
+    $column = Column::make('Title', 'title');
+
+    expect($column->isFrozen())->toBeFalse()
+        ->and($column->getWidth())->toBeNull();
+});
+
+it('marks a column frozen with its pixel width', function () {
+    $column = Column::make('Title', 'title')->frozen(150);
+
+    expect($column->isFrozen())->toBeTrue()
+        ->and($column->getWidth())->toBe(150);
+});

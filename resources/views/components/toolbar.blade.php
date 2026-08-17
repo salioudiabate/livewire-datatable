@@ -45,6 +45,22 @@
             </button>
         @endif
 
+        @if ($this->showDensityToggle())
+            <div class="flex items-center overflow-hidden rounded-lg border border-slate-200" role="group" aria-label="{{ __('livewire-datatable::livewire-datatable.density') }}">
+                @foreach ($this->densityOptions() as $option)
+                    <button
+                        type="button"
+                        wire:click="setDensity('{{ $option }}')"
+                        aria-pressed="{{ $this->density === $option ? 'true' : 'false' }}"
+                        title="{{ __('livewire-datatable::livewire-datatable.density_'.$option) }}"
+                        class="px-2 py-1.5 text-xs {{ $this->density === $option ? 'bg-[var(--dt-primary, #4f46e5)] text-[var(--dt-primary-text, #ffffff)]' : 'text-slate-500 hover:bg-[var(--dt-primary-light, #eef2ff)]' }}"
+                    >
+                        {{ __('livewire-datatable::livewire-datatable.density_'.$option) }}
+                    </button>
+                @endforeach
+            </div>
+        @endif
+
         @if ($this->showPerPage())
             <select
                 wire:model.live="perPage"

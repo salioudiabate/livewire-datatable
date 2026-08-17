@@ -1,6 +1,9 @@
 <tr>
     @if (count($this->authorizedBulkActions()) > 0)
-        <th class="{{ $this->thClasses() }} w-px">
+        <th
+            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' w-px '.($this->hasFrozenColumns($columns) ? $this->frozenTheadBackgroundClass() : '')) }}"
+            @if ($style = $this->frozenCheckboxStyle($columns)) style="{{ $style }}" @endif
+        >
             <input
                 type="checkbox"
                 wire:model.live="selectAll"
@@ -11,7 +14,10 @@
     @endif
 
     @foreach ($columns as $column)
-        <th class="{{ trim($this->thClasses().' '.$column->getThClass()) }}">
+        <th
+            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' '.$column->getThClass().' '.($column->isFrozen() ? $this->frozenTheadBackgroundClass().' '.$this->frozenRightEdgeClass($column, $columns) : '')) }}"
+            @if ($style = $this->frozenColumnStyle($column, $columns)) style="{{ $style }}" @endif
+        >
             @if ($column->getThView())
                 @include($column->getThView(), ['column' => $column])
             @elseif ($column->isSortable())
@@ -32,6 +38,6 @@
     @endforeach
 
     @if (count($this->rowActions()) > 0)
-        <th class="{{ $this->thClasses() }} w-px"></th>
+        <th class="{{ trim($this->thClasses().' '.$this->densityThClasses()) }} w-px"></th>
     @endif
 </tr>

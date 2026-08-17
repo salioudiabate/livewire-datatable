@@ -51,6 +51,8 @@ class UsersTable extends DataTableComponent
 - [Selection & bulk actions](#selection--bulk-actions)
 - [Bulk delete](#bulk-delete)
 - [Column visibility](#column-visibility)
+- [Row density](#row-density)
+- [Frozen columns](#frozen-columns)
 - [Export](#export)
 - [Row actions](#row-actions)
 - [Theming](#theming)
@@ -365,6 +367,47 @@ protected function persistColumnVisibility(): ?string
     return 'users-table';
 }
 ```
+
+## Row density
+
+A compact/comfortable/spacious toggle appears in the toolbar automatically, controlling only the vertical padding of `th`/`td` cells — everything else about the table stays the same. Comfortable is the default:
+
+```php
+protected function defaultDensity(): string // or config('livewire-datatable.density.default')
+{
+    return 'compact';
+}
+```
+
+Hide the toggle with `showDensityToggle(): false`, or persist the choice across requests (session-backed, same pattern as column visibility) with `persistDensity()`:
+
+```php
+protected function persistDensity(): ?string
+{
+    return 'users-table';
+}
+```
+
+Padding per mode is configurable globally via `config('livewire-datatable.density')`, or per-table by overriding `densityThClasses()`/`densityTdClasses()`.
+
+## Frozen columns
+
+Pin a leading run of columns so they stay visible while the rest of a wide table scrolls horizontally — useful for an identifying column (name, SKU) on a table with many data columns. Each frozen column needs an explicit pixel width, since there's no way to measure a rendered column's width from PHP and a later frozen column's position depends on the widths of the ones before it:
+
+```php
+public function columns(): array
+{
+    return [
+        Column::make('Name', 'name')->frozen(200),
+        Column::make('Email', 'email'),
+        // ...many more columns that scroll under "Name"
+    ];
+}
+```
+
+Frozen columns must be a **leading, contiguous run** — `Column::make('Email', 'email')->frozen(160)` coming *after* a non-frozen column throws (surfaced as the same friendly error view as any other `columns()` misconfiguration). If bulk actions/selection are enabled, the selection checkbox column is automatically pinned alongside the frozen columns too, so nothing scrolls out from under it.
+
+The reserved width for that checkbox column (`config('livewire-datatable.frozen_checkbox_width')`) and the frozen-cell background/edge-shadow classes (`config('livewire-datatable.classes.frozen_thead_bg')` etc.) are configurable if you've changed the table's overall padding or colors.
 
 ## Export
 
