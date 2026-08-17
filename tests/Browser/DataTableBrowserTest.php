@@ -34,8 +34,13 @@ it('searches the table live as the user types', function () {
 it('sorts by clicking a sortable column header', function () {
     // Views are the reverse of id order, so sorting actually changes the
     // first visible row instead of coincidentally matching the default
-    // (unsorted, id-ascending) order. Toggling direction on a second click
-    // is already covered by the Sorting feature test suite.
+    // (unsorted, id-ascending) order.
+    //
+    // Deliberately a single click: a second interaction against the same
+    // page in one test (e.g. clicking the same Livewire-morphed header
+    // again to toggle direction) has been observed to hang the Playwright
+    // driver indefinitely instead of failing or timing out. Toggling
+    // direction is already covered by the Sorting feature test suite.
     foreach (range(1, 15) as $i) {
         Post::create([
             'title' => sprintf('Post %02d', $i),
