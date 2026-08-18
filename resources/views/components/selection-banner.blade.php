@@ -1,8 +1,5 @@
 @if ($this->selectAll && ! $this->isAllFilteredSelected())
-    <div
-        class="{{ $this->selectionBannerClasses() }}"
-        style="border-color: var(--dt-primary,#4f46e5); background-color: var(--dt-primary-light,#eef2ff);"
-    >
+    <div class="{{ $this->selectionBannerClasses() }}">
         <span>{{ __('livewire-datatable::livewire-datatable.page_selected', ['count' => count($this->selected)]) }}</span>
         <button
             type="button"
@@ -13,10 +10,7 @@
         </button>
     </div>
 @elseif ($this->isAllFilteredSelected() && $this->rows->total() > $this->rows->count())
-    <div
-        class="{{ $this->selectionBannerClasses() }}"
-        style="border-color: var(--dt-primary,#4f46e5); background-color: var(--dt-primary-light,#eef2ff);"
-    >
+    <div class="{{ $this->selectionBannerClasses() }}">
         <span>{{ __('livewire-datatable::livewire-datatable.all_filtered_selected', ['count' => count($this->selected)]) }}</span>
         <button
             type="button"

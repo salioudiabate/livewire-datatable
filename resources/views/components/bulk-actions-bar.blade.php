@@ -1,8 +1,5 @@
 @if (count($this->authorizedBulkActions()) > 0 && count($this->selected) > 0)
-    <div
-        class="{{ $this->bulkActionsBarClasses() }}"
-        style="border-color: var(--dt-primary,#4f46e5); background-color: var(--dt-primary-light,#eef2ff);"
-    >
+    <div class="{{ $this->bulkActionsBarClasses() }}">
         <span class="font-medium text-slate-700">
             {{ __('livewire-datatable::livewire-datatable.selected_count', ['count' => count($this->selected)]) }}
         </span>

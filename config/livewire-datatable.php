@@ -86,8 +86,8 @@ return [
         // your responsibility to keep if you touch these.
         'toolbar' => 'mb-5 flex flex-wrap items-start justify-between gap-3',
         'filters_panel' => 'mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4',
-        'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-2.5 text-sm',
-        'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border px-4 py-2.5 text-sm text-slate-700',
+        'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm',
+        'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm text-slate-700',
         'empty_state' => 'px-4 py-10 text-center',
         'columns_dropdown' => 'absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
         'error_state' => 'rounded-xl border border-red-200 bg-red-50 p-6 text-center',
