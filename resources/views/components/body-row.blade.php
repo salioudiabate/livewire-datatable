@@ -17,7 +17,7 @@
 
     @foreach ($columns as $column)
         <td
-            class="{{ trim($this->tdClasses().' '.$this->densityTdClasses().' '.($column->isFrozen() ? $this->frozenTbodyBackgroundClass().' '.$this->frozenRightEdgeClass($column, $columns) : '')) }}"
+            class="{{ trim($this->tdClasses().' '.$this->densityTdClasses().' '.$column->getTdClass().' '.($column->isFrozen() ? $this->frozenTbodyBackgroundClass().' '.$this->frozenRightEdgeClass($column, $columns) : '')) }}"
             @if ($style = $this->frozenColumnStyle($column, $columns)) style="{{ $style }}" @endif
         >
             @if ($column->getView())

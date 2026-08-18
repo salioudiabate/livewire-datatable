@@ -1,6 +1,6 @@
 @if (count($this->authorizedBulkActions()) > 0 && count($this->selected) > 0)
     <div
-        class="mb-4 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-2.5 text-sm"
+        class="{{ $this->bulkActionsBarClasses() }}"
         style="border-color: var(--dt-primary,#4f46e5); background-color: var(--dt-primary-light,#eef2ff);"
     >
         <span class="font-medium text-slate-700">

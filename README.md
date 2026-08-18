@@ -213,6 +213,7 @@ Column::make('Status', 'status')
     ->view('partials.status-badge')                   // or a full Blade partial instead of format()
     ->thView('partials.status-header')                 // custom header cell
     ->thClass('text-right')                             // extra <th> classes
+    ->tdClass('text-right tabular-nums')                 // extra <td> classes, for this column only
     ->searchable()                                       // include in the global search box
     ->searchable(fn ($query, $term) => $query->orWhere('legacy_status', 'like', "%{$term}%"))
     ->sortable()                                         // click-to-sort
@@ -510,16 +511,27 @@ Set `'inject_theme_style' => false` in the config if you'd rather define the `--
 
 ## Styling hooks
 
-Structural classes are configurable globally (`config('livewire-datatable.classes')`) or per-table by overriding the matching method:
+Every structural compartment of the table — toolbar, filters panel, header/body cells, bulk actions bar, selection banner, empty state, error state, pagination — is a full-replace class hook: configurable globally (`config('livewire-datatable.classes')`, published to your app) or per-table by overriding the matching method on your `DataTableComponent` subclass:
 
 ```php
 protected function tableWrapperClasses(): string
 {
     return 'overflow-x-auto rounded-2xl border border-slate-300';
 }
+
+protected function toolbarClasses(): string
+{
+    return 'mb-6 flex flex-wrap items-center justify-between gap-4';
+}
 ```
 
-Available hooks: `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`.
+Whatever a hook returns becomes the *entire* class list for that element — there's no merging with a package default. That's deliberate: it's what makes every compartment genuinely restylable rather than only extendable, but it also means structural utilities the compartment needs to work (`overflow-x-auto`, `flex`, `overflow-hidden`, etc.) are your responsibility to keep if you touch one of these.
+
+Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`.
+
+For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
+
+One hook is global-only, with no per-table method: `config('livewire-datatable.classes.pagination_bar')`. Laravel renders the paginator's view (`tailwind.blade.php` / `simple-tailwind.blade.php`) in its own context outside the component's Blade scope, so it can't reach `$this` on your component — it applies to every table in the app.
 
 ## Translations
 

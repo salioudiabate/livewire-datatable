@@ -1,4 +1,4 @@
-<div class="mb-5 flex flex-wrap items-start justify-between gap-3">
+<div class="{{ $this->toolbarClasses() }}">
     <div class="flex flex-1 flex-wrap items-start gap-2.5">
         @if ($this->showSearch())
             <div class="relative">

@@ -77,6 +77,29 @@ return [
         'frozen_thead_bg' => 'bg-slate-50',
         'frozen_tbody_bg' => 'bg-white',
         'frozen_edge' => 'shadow-[2px_0_4px_-2px_rgba(0,0,0,0.15)]',
+
+        // The remaining hooks below are full-replace, same as the ones
+        // above: whatever you set here (or return from the matching
+        // Concerns\HasStyling method override) becomes the *entire* class
+        // list for that compartment — structural utilities (flex,
+        // overflow-hidden, etc.) that make it render/behave correctly are
+        // your responsibility to keep if you touch these.
+        'toolbar' => 'mb-5 flex flex-wrap items-start justify-between gap-3',
+        'filters_panel' => 'mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4',
+        'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border px-4 py-2.5 text-sm',
+        'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border px-4 py-2.5 text-sm text-slate-700',
+        'empty_state' => 'px-4 py-10 text-center',
+        'columns_dropdown' => 'absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
+        'error_state' => 'rounded-xl border border-red-200 bg-red-50 p-6 text-center',
+
+        // Global only — Laravel renders the paginator's view (tailwind.blade.php
+        // / simple-tailwind.blade.php) in its own context, outside the
+        // component's Blade scope, so there's no per-table HasStyling method
+        // for this one. Applies to every table in the app. Deliberately
+        // excludes display utilities (inline-flex/hidden) — each usage site
+        // appends its own, since the desktop bar is responsively hidden on
+        // mobile and the simple (Previous/Next only) bar isn't.
+        'pagination_bar' => 'relative z-0 overflow-hidden rounded-lg border border-slate-200',
     ],
 
     /*

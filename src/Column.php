@@ -22,6 +22,8 @@ final class Column
 
     private string $thClass = '';
 
+    private string $tdClass = '';
+
     private bool $searchable = false;
 
     private ?Closure $searchUsing = null;
@@ -79,6 +81,13 @@ final class Column
     public function thClass(string $class): static
     {
         $this->thClass = $class;
+
+        return $this;
+    }
+
+    public function tdClass(string $class): static
+    {
+        $this->tdClass = $class;
 
         return $this;
     }
@@ -170,6 +179,11 @@ final class Column
     public function getThClass(): string
     {
         return $this->thClass;
+    }
+
+    public function getTdClass(): string
+    {
+        return $this->tdClass;
     }
 
     public function isSearchable(): bool

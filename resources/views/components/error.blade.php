@@ -1,4 +1,4 @@
-<div class="dt-root rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+<div class="dt-root {{ $this->errorStateClasses() }}">
     <p class="text-sm font-medium text-red-700">{{ __('livewire-datatable::livewire-datatable.render_error') }}</p>
 
     @if ($debug)

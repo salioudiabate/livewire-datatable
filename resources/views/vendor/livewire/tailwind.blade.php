@@ -45,7 +45,7 @@
             </div>
 
             {{-- Desktop / tablet: full segmented page-number bar --}}
-            <span class="relative z-0 hidden overflow-hidden rounded-lg border border-slate-200 sm:inline-flex">
+            <span class="{{ config('livewire-datatable.classes.pagination_bar', '') }} hidden sm:inline-flex">
                 @if ($paginator->onFirstPage())
                     <span aria-disabled="true" aria-hidden="true" class="relative inline-flex items-center bg-white px-2 py-1.5 text-xs font-medium leading-5 text-slate-300">
                         <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>

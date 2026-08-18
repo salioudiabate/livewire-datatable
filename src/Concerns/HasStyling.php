@@ -55,4 +55,39 @@ trait HasStyling
     {
         return (string) config('livewire-datatable.classes.pagination_wrapper', '');
     }
+
+    public function toolbarClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.toolbar', '');
+    }
+
+    public function filtersPanelClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.filters_panel', '');
+    }
+
+    public function bulkActionsBarClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.bulk_actions_bar', '');
+    }
+
+    public function selectionBannerClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.selection_banner', '');
+    }
+
+    public function emptyStateClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.empty_state', '');
+    }
+
+    public function columnsDropdownClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.columns_dropdown', '');
+    }
+
+    public function errorStateClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.error_state', '');
+    }
 }

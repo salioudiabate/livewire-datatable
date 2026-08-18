@@ -21,7 +21,7 @@
             x-transition:leave="transition ease-in duration-75"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-            class="absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100"
+            class="{{ $this->columnsDropdownClasses() }}"
         >
             @foreach ($this->toggleableColumns() as $column)
                 <label class="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50">

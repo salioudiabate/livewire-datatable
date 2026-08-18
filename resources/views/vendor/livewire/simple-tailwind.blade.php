@@ -11,7 +11,7 @@
 <div>
     @if ($paginator->hasPages())
         <nav role="navigation" aria-label="{{ __('livewire-datatable::livewire-datatable.pagination') }}">
-            <span class="relative z-0 inline-flex overflow-hidden rounded-lg border border-slate-200">
+            <span class="{{ config('livewire-datatable.classes.pagination_bar', '') }} inline-flex">
                 @if ($paginator->onFirstPage())
                     <span aria-disabled="true" aria-hidden="true" class="relative inline-flex items-center border-r border-slate-200 bg-white px-4 py-1.5 text-xs font-medium leading-5 text-slate-300">
                         {{ __('livewire-datatable::livewire-datatable.previous') }}
