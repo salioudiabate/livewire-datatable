@@ -3,7 +3,7 @@
     <select
         multiple
         wire:model.live="filterValues.{{ $filter->key() }}"
-        class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]"
+        class="w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]"
     >
         @foreach ($filter->getOptions() as $value => $label)
             <option value="{{ $value }}">{{ $label }}</option>
