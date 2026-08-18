@@ -65,7 +65,10 @@ return [
         'th' => 'text-left text-xs font-semibold uppercase tracking-wide text-slate-500',
         'tbody_tr' => 'border-b border-slate-100 bg-white transition-colors duration-100 last:border-0 hover:bg-slate-50/60',
         'td' => 'text-slate-700',
-        'pagination_wrapper' => 'flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between',
+        // No horizontal padding of its own — deliberately, so it aligns with
+        // table_wrapper (also unpadded) rather than double-padding on top of
+        // whatever container the host page already wraps this table in.
+        'pagination_wrapper' => 'mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between',
 
         // Used only by frozen (Column::frozen()) columns and the selection
         // checkbox column when at least one column is frozen: an opaque
