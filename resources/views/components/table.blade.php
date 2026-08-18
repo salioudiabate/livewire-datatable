@@ -34,9 +34,21 @@
         </table>
     </div>
 
-    @if ($this->rows->hasPages())
+    @if ($this->rows->total() > 0)
         <div class="{{ $this->paginationWrapperClasses() }}">
-            {{ $this->rows->links() }}
+            <span class="text-center text-xs text-slate-400 sm:text-left">
+                {{ __('livewire-datatable::livewire-datatable.showing') }}
+                <span class="font-semibold text-slate-500">{{ $this->rows->firstItem() }}</span>
+                {{ __('livewire-datatable::livewire-datatable.to') }}
+                <span class="font-semibold text-slate-500">{{ $this->rows->lastItem() }}</span>
+                {{ __('livewire-datatable::livewire-datatable.of') }}
+                <span class="font-semibold text-slate-500">{{ $this->rows->total() }}</span>
+                {{ __('livewire-datatable::livewire-datatable.results') }}
+            </span>
+
+            <div class="flex justify-center sm:justify-end">
+                {{ $this->rows->links() }}
+            </div>
         </div>
     @endif
 </div>
