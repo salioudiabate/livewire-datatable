@@ -33,4 +33,5 @@ return [
     'density_compact' => 'Compact',
     'density_comfortable' => 'Comfortable',
     'density_spacious' => 'Spacious',
+    'page_of' => 'Page :current of :last',
 ];

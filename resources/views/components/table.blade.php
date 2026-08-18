@@ -46,7 +46,7 @@
                 {{ __('livewire-datatable::livewire-datatable.results') }}
             </span>
 
-            <div class="flex justify-center sm:justify-end">
+            <div class="flex min-w-0 w-full justify-center sm:w-auto sm:justify-end">
                 {{ $this->rows->links() }}
             </div>
         </div>

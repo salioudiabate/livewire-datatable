@@ -1,5 +1,5 @@
-<div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-    <div class="flex flex-1 flex-wrap items-center gap-2.5">
+<div class="mb-5 flex flex-wrap items-start justify-between gap-3">
+    <div class="flex flex-1 flex-wrap items-start gap-2.5">
         @if ($this->showSearch())
             <div class="relative">
                 <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
         @endif
     </div>
 
-    <div class="flex flex-wrap items-center gap-2.5">
+    <div class="flex flex-wrap items-start gap-2.5">
         @include('livewire-datatable::components.column-visibility-toggle')
 
         @if ($this->showExport())
