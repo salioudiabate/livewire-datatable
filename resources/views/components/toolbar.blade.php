@@ -1,4 +1,4 @@
-<div class="flex flex-wrap items-center justify-between gap-3 p-4">
+<div class="mb-5 flex flex-wrap items-center justify-between gap-3">
     <div class="flex flex-1 flex-wrap items-center gap-2.5">
         @if ($this->showSearch())
             <div class="relative">
