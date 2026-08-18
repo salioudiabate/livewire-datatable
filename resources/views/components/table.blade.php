@@ -1,10 +1,17 @@
-<div class="dt-root" x-data="{ filtersOpen: @js($this->filtersDefaultOpen()) }">
+<div class="dt-root {{ $this->rootClasses() }}" x-data="{ filtersOpen: @js($this->filtersDefaultOpen()) }">
     @include('livewire-datatable::components.theme-style')
 
     @include('livewire-datatable::components.toolbar', ['filters' => $filters])
 
     @if (count($filters) > 0)
-        <div x-show="filtersOpen" x-cloak class="border-b border-slate-200 bg-slate-50 p-4">
+        <div
+            x-show="filtersOpen"
+            x-cloak
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 -translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            class="mx-4 mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
+        >
             @include('livewire-datatable::components.filters-panel', ['filters' => $filters])
         </div>
     @endif

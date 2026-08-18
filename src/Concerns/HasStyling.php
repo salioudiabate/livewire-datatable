@@ -11,6 +11,16 @@ namespace Salioudiabate\LivewireDatatable\Concerns;
  */
 trait HasStyling
 {
+    /**
+     * Classes for the single outer card wrapping the toolbar, table, and
+     * pagination — one unified soft-shadowed container rather than each
+     * piece carrying its own border/radius.
+     */
+    public function rootClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.root', '');
+    }
+
     public function tableWrapperClasses(): string
     {
         return (string) config('livewire-datatable.classes.table_wrapper', '');

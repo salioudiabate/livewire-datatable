@@ -24,7 +24,7 @@
                 <button
                     type="button"
                     wire:click="sortBy('{{ $column->getField() }}')"
-                    class="flex items-center gap-1 hover:text-slate-700"
+                    class="flex items-center gap-1 uppercase tracking-wide transition-colors duration-150 hover:text-slate-700"
                 >
                     {{ $column->getLabel() }}
                     @if ($this->sortField === $column->getField())

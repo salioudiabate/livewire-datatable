@@ -50,16 +50,22 @@ return [
     |
     */
     'classes' => [
-        'table_wrapper' => 'overflow-x-auto rounded-xl border border-slate-200 bg-white',
-        'table' => 'min-w-full divide-y divide-slate-200 text-sm',
-        'thead_tr' => 'bg-slate-50',
+        // No card/border/shadow by default — a flat, borderless root, the
+        // toolbar and table define their own dividers. Available as a hook
+        // if you *want* a card look; empty means "get out of the way".
+        'root' => '',
+        // border-y only (no left/right, no radius, no shadow) is deliberate:
+        // a flat divider rather than a boxed-in table.
+        'table_wrapper' => 'overflow-x-auto border-y border-slate-200/80 bg-white',
+        'table' => 'min-w-full text-sm',
+        'thead_tr' => 'border-b border-slate-200 bg-slate-50',
         // Vertical padding is deliberately absent here — it's density-driven
         // (see 'density' below) and composed onto these in the header/body
         // row views, the same way column-specific classes are composed.
         'th' => 'text-left text-xs font-semibold uppercase tracking-wide text-slate-500',
-        'tbody_tr' => 'divide-y divide-slate-100 bg-white',
+        'tbody_tr' => 'border-b border-slate-100 bg-white transition-colors duration-100 last:border-0 hover:bg-slate-50/60',
         'td' => 'text-slate-700',
-        'pagination_wrapper' => 'flex flex-col gap-3 border-t border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between',
+        'pagination_wrapper' => 'flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between',
 
         // Used only by frozen (Column::frozen()) columns and the selection
         // checkbox column when at least one column is frozen: an opaque
