@@ -11,46 +11,38 @@
 <div>
     @if ($paginator->hasPages())
         <nav role="navigation" aria-label="{{ __('livewire-datatable::livewire-datatable.pagination') }}" class="flex items-center justify-between sm:justify-end">
-            {{-- Mobile: simple Previous / Page X of Y / Next --}}
-            <span class="relative z-0 inline-flex overflow-hidden rounded-lg border border-slate-200 sm:hidden">
-                @if ($paginator->onFirstPage())
-                    <span aria-disabled="true" aria-hidden="true" class="relative inline-flex items-center bg-white px-2.5 py-1.5 text-xs font-medium leading-5 text-slate-300">
-                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                    </span>
-                @else
-                    <button
-                        type="button"
-                        wire:click="previousPage('{{ $paginator->getPageName() }}')"
-                        x-on:click="{{ $scrollIntoViewJsSnippet }}"
-                        wire:loading.attr="disabled"
-                        aria-label="{{ __('livewire-datatable::livewire-datatable.previous') }}"
-                        class="relative inline-flex items-center border-r border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium leading-5 text-slate-500 transition ease-in-out duration-150 hover:bg-slate-50 hover:text-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] active:bg-slate-100"
-                    >
-                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                    </button>
-                @endif
+            {{-- Mobile: soft Previous / Page X of Y / Next --}}
+            <div class="flex w-full items-center justify-between gap-2 sm:hidden">
+                <button
+                    type="button"
+                    wire:click="previousPage('{{ $paginator->getPageName() }}')"
+                    x-on:click="{{ $scrollIntoViewJsSnippet }}"
+                    wire:loading.attr="disabled"
+                    @disabled($paginator->onFirstPage())
+                    aria-label="{{ __('livewire-datatable::livewire-datatable.previous') }}"
+                    class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] disabled:pointer-events-none disabled:opacity-40"
+                >
+                    <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                    {{ __('livewire-datatable::livewire-datatable.previous') }}
+                </button>
 
-                <span aria-hidden="true" class="relative -ml-px inline-flex items-center border-r border-slate-200 bg-white px-3 py-1.5 text-xs font-medium leading-5 text-slate-500">
+                <span class="text-xs font-medium text-slate-400">
                     {{ __('livewire-datatable::livewire-datatable.page_of', ['current' => $paginator->currentPage(), 'last' => $paginator->lastPage()]) }}
                 </span>
 
-                @if ($paginator->hasMorePages())
-                    <button
-                        type="button"
-                        wire:click="nextPage('{{ $paginator->getPageName() }}')"
-                        x-on:click="{{ $scrollIntoViewJsSnippet }}"
-                        wire:loading.attr="disabled"
-                        aria-label="{{ __('livewire-datatable::livewire-datatable.next') }}"
-                        class="relative -ml-px inline-flex items-center bg-white px-2.5 py-1.5 text-xs font-medium leading-5 text-slate-500 transition ease-in-out duration-150 hover:bg-slate-50 hover:text-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] active:bg-slate-100"
-                    >
-                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
-                    </button>
-                @else
-                    <span aria-disabled="true" aria-hidden="true" class="relative -ml-px inline-flex items-center bg-white px-2.5 py-1.5 text-xs font-medium leading-5 text-slate-300">
-                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
-                    </span>
-                @endif
-            </span>
+                <button
+                    type="button"
+                    wire:click="nextPage('{{ $paginator->getPageName() }}')"
+                    x-on:click="{{ $scrollIntoViewJsSnippet }}"
+                    wire:loading.attr="disabled"
+                    @disabled(! $paginator->hasMorePages())
+                    aria-label="{{ __('livewire-datatable::livewire-datatable.next') }}"
+                    class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] disabled:pointer-events-none disabled:opacity-40"
+                >
+                    {{ __('livewire-datatable::livewire-datatable.next') }}
+                    <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                </button>
+            </div>
 
             {{-- Desktop / tablet: full segmented page-number bar --}}
             <span class="relative z-0 hidden overflow-hidden rounded-lg border border-slate-200 sm:inline-flex">
