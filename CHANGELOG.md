@@ -5,6 +5,22 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-08-18
+
+### Added
+
+- `Concerns\HasStyling::rootClasses()` — a styling hook for the single outer wrapper around the toolbar, table, and pagination (default: empty, flat, no card).
+
+### Fixed
+
+- The per-page/boolean/select filter `<select>` elements' custom chevron icon overlapped with Tailwind Forms' own auto-injected background-image arrow when both were present. `bg-none` now cancels the latter.
+- Sortable column headers render as `<button>`, and Tailwind's preflight resets `button { text-transform: none }`, silently cancelling the `uppercase` inherited from the header cell — only non-sortable headers actually appeared uppercase. Applied directly on the button now.
+
+### Changed
+
+- Toolbar controls (search, Filters, Columns, Export, density toggle, per-page select) now share one consistent flat recipe (`rounded-lg`, `border-slate-200`, `py-2`, no shadow) instead of drifting sizes and padding.
+- Pagination, dropdowns, the filters panel, and selection/bulk-action banners follow the same flat philosophy: no shadow on inline controls, `shadow-lg shadow-slate-100` reserved for floating popovers, `rounded-xl` for panels, `rounded-lg` for inline controls.
+
 ## [1.1.0] - 2026-08-17
 
 ### Added
