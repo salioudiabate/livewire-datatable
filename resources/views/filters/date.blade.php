@@ -3,6 +3,6 @@
     <input
         type="date"
         wire:model.live="filterValues.{{ $filter->key() }}"
-        class="rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary, #4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary, #4f46e5)]"
+        class="rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]"
     />
 </div>

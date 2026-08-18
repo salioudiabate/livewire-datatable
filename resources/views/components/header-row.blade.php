@@ -8,7 +8,7 @@
                 type="checkbox"
                 wire:model.live="selectAll"
                 aria-label="{{ __('livewire-datatable::livewire-datatable.select_all_filtered', ['count' => $this->rows->total()]) }}"
-                class="rounded border-slate-300 text-[var(--dt-primary, #4f46e5)] focus:ring-[var(--dt-primary, #4f46e5)]"
+                class="rounded border-slate-300 text-[var(--dt-primary,#4f46e5)] focus:ring-[var(--dt-primary,#4f46e5)]"
             />
         </th>
     @endif
@@ -28,7 +28,7 @@
                 >
                     {{ $column->getLabel() }}
                     @if ($this->sortField === $column->getField())
-                        <span class="text-[var(--dt-primary, #4f46e5)]">{{ $this->sortDirection === 'asc' ? '↑' : '↓' }}</span>
+                        <span class="text-[var(--dt-primary,#4f46e5)]">{{ $this->sortDirection === 'asc' ? '↑' : '↓' }}</span>
                     @endif
                 </button>
             @else

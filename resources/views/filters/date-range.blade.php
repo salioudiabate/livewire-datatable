@@ -4,13 +4,13 @@
         <input
             type="date"
             wire:model.live="filterValues.{{ $filter->fromKey() }}"
-            class="w-full rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary, #4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary, #4f46e5)]"
+            class="w-full rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]"
         />
         <span class="shrink-0 text-xs text-slate-400">{{ __('livewire-datatable::livewire-datatable.range_separator') }}</span>
         <input
             type="date"
             wire:model.live="filterValues.{{ $filter->toKey() }}"
-            class="w-full rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary, #4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary, #4f46e5)]"
+            class="w-full rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]"
         />
     </div>
 </div>
