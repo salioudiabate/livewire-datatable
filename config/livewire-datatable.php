@@ -89,6 +89,12 @@ return [
         'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm',
         'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm text-slate-700',
         'empty_state' => 'px-4 py-10 text-center',
+        // footer() summary blocks — one row of label/value pills between the
+        // table and pagination. justify-between so items with align: 'left'
+        // and align: 'right' split to opposite ends, like the bulk actions
+        // bar / selection banner above them.
+        'footer_wrapper' => 'mb-4 flex flex-wrap items-center justify-between gap-2',
+        'footer_item' => 'inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2',
         // z-20: must outrank the sticky header's z-index: 10 (HasStickyHeader)
         // — equal values would let the header win on DOM order and paint
         // over this panel, since <thead> renders after the toolbar.

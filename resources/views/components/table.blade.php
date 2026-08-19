@@ -45,6 +45,8 @@
         </table>
     </div>
 
+    @include('livewire-datatable::components.footer')
+
     @if ($this->rows->total() > 0)
         <div class="{{ $this->paginationWrapperClasses() }}">
             <span class="text-center text-xs text-slate-400 sm:text-left">

@@ -56,6 +56,7 @@ class UsersTable extends DataTableComponent
 - [Row density](#row-density)
 - [Frozen columns](#frozen-columns)
 - [Sticky header](#sticky-header)
+- [Footer](#footer)
 - [Export](#export)
 - [Row actions](#row-actions)
 - [Clickable rows](#clickable-rows)
@@ -492,6 +493,32 @@ protected function stickyHeaderMaxHeight(): string
 
 Combines correctly with frozen columns — a column that's both frozen and in a sticky header gets both `position: sticky` offsets (`left` and `top`) at once, not one replacing the other.
 
+## Footer
+
+Optional summary blocks — a count, a total, an average — rendered as a row of label/value pills below the table, above pagination. Empty by default, so nothing renders unless you override it:
+
+```php
+public function footer(): array
+{
+    $count = $this->filteredDataSource()->count();
+
+    if ($count === 0) {
+        return [];
+    }
+
+    return [
+        ['label' => 'Products', 'value' => (string) $count, 'align' => 'left'],
+        ['label' => 'Total stock value', 'value' => number_format(
+            (float) $this->filteredDataSource()->aggregate('sum', 'price'), 2
+        ).' €'],
+    ];
+}
+```
+
+Each item is `['label' => string, 'value' => string, 'align' => 'left'|'right']` — `align` defaults to `'right'` when omitted, so items split into two groups at opposite ends of the row, the same way the bulk actions bar does.
+
+This is deliberately free-form rather than tied to a specific `Column` — a table can show fewer, more, or differently-computed blocks than it has columns (e.g. one combined "Revenue: X · Expenses: Y · Margin: Z" block instead of one per column). Compute values against `filteredDataSource()` (protected, inherited from `ResolvesDataSource`), not `rows()` — it reflects search and filters but not pagination, so a sum here covers every matching row, not just the current page. `DataSource::aggregate('sum'|'avg'|'min'|'max'|'count', $column)` does this without loading the full result set into memory on the Eloquent/Query Builder/RawSql adapters. For anything the four built-in aggregate functions can't express, `filteredDataSource()->raw()` hands you the underlying query/collection directly.
+
 ## Export
 
 A CSV export button appears in the toolbar automatically (`showExport()`, default `true`). Its label comes from the `export` translation by default — override `exportLabel(): string` per-table for anything else. It streams the **current filtered view** (search + filters applied, not just the current page) in chunks — never materializing the whole result set in memory:
@@ -717,7 +744,7 @@ protected function toolbarClasses(): string
 
 Whatever a hook returns becomes the *entire* class list for that element — there's no merging with a package default. That's deliberate: it's what makes every compartment genuinely restylable rather than only extendable, but it also means structural utilities the compartment needs to work (`overflow-x-auto`, `flex`, `overflow-hidden`, etc.) are your responsibility to keep if you touch one of these.
 
-Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`.
+Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`, `footerWrapperClasses()`, `footerItemClasses()`.
 
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
 

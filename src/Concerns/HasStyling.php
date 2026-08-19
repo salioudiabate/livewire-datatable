@@ -131,4 +131,21 @@ trait HasStyling
     {
         return (string) config('livewire-datatable.classes.toolbar_action_dropdown', '');
     }
+
+    /**
+     * Wrapper around the footer() summary blocks, rendered below the table
+     * and above pagination.
+     */
+    public function footerWrapperClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.footer_wrapper', '');
+    }
+
+    /**
+     * Each individual footer() block ({label, value} pill).
+     */
+    public function footerItemClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.footer_item', '');
+    }
 }

@@ -14,6 +14,7 @@ use Salioudiabate\LivewireDatatable\Concerns\HasColumnVisibility;
 use Salioudiabate\LivewireDatatable\Concerns\HasDensity;
 use Salioudiabate\LivewireDatatable\Concerns\HasExport;
 use Salioudiabate\LivewireDatatable\Concerns\HasFilters;
+use Salioudiabate\LivewireDatatable\Concerns\HasFooter;
 use Salioudiabate\LivewireDatatable\Concerns\HasFrozenColumns;
 use Salioudiabate\LivewireDatatable\Concerns\HasPagination;
 use Salioudiabate\LivewireDatatable\Concerns\HasPolling;
@@ -44,6 +45,7 @@ abstract class DataTableComponent extends Component
     use HasDensity;
     use HasExport;
     use HasFilters;
+    use HasFooter;
     use HasFrozenColumns;
     use HasPagination;
     use HasPolling;
