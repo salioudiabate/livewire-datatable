@@ -25,7 +25,12 @@
     @include('livewire-datatable::components.bulk-actions-bar')
     @include('livewire-datatable::components.selection-banner')
 
-    <div class="{{ $this->tableWrapperClasses() }}">
+    <div
+        class="{{ $this->tableWrapperClasses() }}"
+        @if ($this->stickyHeader())
+            style="{{ $this->stickyHeaderWrapperStyle() }}"
+        @endif
+    >
         <table class="{{ $this->tableClasses() }}">
             <thead class="{{ $this->theadTrClasses() }}">
                 @include('livewire-datatable::components.header-row', ['columns' => $columns])

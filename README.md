@@ -481,12 +481,12 @@ public function stickyHeader(): bool
 }
 ```
 
-If your app has its own fixed/sticky navbar, the table header will stick right underneath it unless you offset it:
+This can't stick relative to the page the way a naive `position: sticky` might suggest — `table_wrapper` already carries `overflow-x-auto` for horizontal scroll (frozen columns, wide tables), and per the CSS Overflow spec, setting `overflow-x` to anything but `visible` forces the computed `overflow-y` to `auto` too. The wrapper silently becomes its own scroll container regardless, so a sticky cell inside it sticks relative to *that* container, not the page. Rather than fight this, `stickyHeader()` embraces it: the wrapper gets a bounded height and scrolls internally on both axes, with the header pinned to the top of that same scrollport:
 
 ```php
-protected function stickyHeaderOffset(): int
+protected function stickyHeaderMaxHeight(): string
 {
-    return 64; // px — your navbar's height
+    return '600px'; // any valid CSS length — default '70vh'
 }
 ```
 

@@ -13,13 +13,14 @@ beforeEach(function () {
     ]);
 });
 
-it('does not add sticky positioning to the header by default', function () {
+it('does not add sticky positioning or a bounded-height wrapper by default', function () {
     $html = Livewire::test(PostsTable::class)->html();
 
-    expect($html)->not->toContain('position: sticky; top:');
+    expect($html)->not->toContain('position: sticky; top: 0; z-index: 10;')
+        ->and($html)->not->toContain('max-height:');
 });
 
-it('pins the header at the top of the scroll context once stickyHeader() is true', function () {
+it('pins the header and bounds the wrapper height once stickyHeader() is true', function () {
     $html = Livewire::test(new class extends PostsTable
     {
         public function stickyHeader(): bool
@@ -28,10 +29,11 @@ it('pins the header at the top of the scroll context once stickyHeader() is true
         }
     })->html();
 
-    expect($html)->toContain('position: sticky; top: 0px; z-index: 10;');
+    expect($html)->toContain('position: sticky; top: 0; z-index: 10;')
+        ->and($html)->toContain('max-height: 70vh; overflow-y: auto;');
 });
 
-it('offsets the sticky header by stickyHeaderOffset()', function () {
+it('uses a custom max-height from stickyHeaderMaxHeight()', function () {
     $html = Livewire::test(new class extends PostsTable
     {
         public function stickyHeader(): bool
@@ -39,13 +41,13 @@ it('offsets the sticky header by stickyHeaderOffset()', function () {
             return true;
         }
 
-        protected function stickyHeaderOffset(): int
+        protected function stickyHeaderMaxHeight(): string
         {
-            return 64;
+            return '400px';
         }
     })->html();
 
-    expect($html)->toContain('position: sticky; top: 64px; z-index: 10;');
+    expect($html)->toContain('max-height: 400px; overflow-y: auto;');
 });
 
 it('combines sticky header positioning with an already-frozen column instead of one overwriting the other', function () {
@@ -57,7 +59,7 @@ it('combines sticky header positioning with an already-frozen column instead of 
         }
     })->html();
 
-    expect($html)->toContain('position: sticky; left: 0px; width: 150px; min-width: 150px; z-index: 1; position: sticky; top: 0px; z-index: 10;');
+    expect($html)->toContain('position: sticky; left: 0px; width: 150px; min-width: 150px; z-index: 1; position: sticky; top: 0; z-index: 10;');
 });
 
 it('gives every sticky header cell an opaque background so scrolled content does not bleed through', function () {
