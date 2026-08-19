@@ -24,6 +24,11 @@ trait HasFilters
         return [];
     }
 
+    public function filtersLabel(): string
+    {
+        return __('livewire-datatable::livewire-datatable.filters');
+    }
+
     public function updatedFilterValues(): void
     {
         $this->onTableStateChanged();

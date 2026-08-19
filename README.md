@@ -263,6 +263,8 @@ SelectFilter::make('Status', 'status')->using(
 );
 ```
 
+The "Filters" toolbar button's own label comes from the `filters` translation by default — override `filtersLabel(): string` per-table for anything else.
+
 ## Sorting
 
 ```php
@@ -286,6 +288,8 @@ public function showPerPage(): bool  // default true
     return false;
 }
 ```
+
+The search input's placeholder comes from the `search` translation by default — override `searchPlaceholder(): string` per-table for anything else.
 
 The per-page dropdown's own choices (`[10, 25, 50, 100]` by default) are overridable too:
 
@@ -452,7 +456,7 @@ The reserved width for that checkbox column (`config('livewire-datatable.frozen_
 
 ## Export
 
-A CSV export button appears in the toolbar automatically (`showExport()`, default `true`). It streams the **current filtered view** (search + filters applied, not just the current page) in chunks — never materializing the whole result set in memory:
+A CSV export button appears in the toolbar automatically (`showExport()`, default `true`). Its label comes from the `export` translation by default — override `exportLabel(): string` per-table for anything else. It streams the **current filtered view** (search + filters applied, not just the current page) in chunks — never materializing the whole result set in memory:
 
 ```php
 protected function exportFilename(): string

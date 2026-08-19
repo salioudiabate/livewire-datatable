@@ -30,6 +30,11 @@ trait HasExport
         return true;
     }
 
+    public function exportLabel(): string
+    {
+        return __('livewire-datatable::livewire-datatable.export');
+    }
+
     public function export(): Response
     {
         return $this->exporter()->export(

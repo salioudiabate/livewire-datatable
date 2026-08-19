@@ -33,6 +33,11 @@ trait HasSearch
         return true;
     }
 
+    public function searchPlaceholder(): string
+    {
+        return __('livewire-datatable::livewire-datatable.search');
+    }
+
     /**
      * @return array<int, Column>
      */
