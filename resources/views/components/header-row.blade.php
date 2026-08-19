@@ -1,8 +1,15 @@
+@php
+    $stickyHeaderStyle = $this->stickyHeaderStyle();
+    $stickyHeaderActive = $stickyHeaderStyle !== '';
+@endphp
 <tr>
     @if (count($this->authorizedBulkActions()) > 0)
+        @php
+            $checkboxStyle = trim(($this->frozenCheckboxStyle($columns) ?? '').' '.$stickyHeaderStyle);
+        @endphp
         <th
-            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' w-px '.($this->hasFrozenColumns($columns) ? $this->frozenTheadBackgroundClass() : '')) }}"
-            @if ($style = $this->frozenCheckboxStyle($columns)) style="{{ $style }}" @endif
+            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' w-px '.(($this->hasFrozenColumns($columns) || $stickyHeaderActive) ? $this->frozenTheadBackgroundClass() : '')) }}"
+            @if ($checkboxStyle !== '') style="{{ $checkboxStyle }}" @endif
         >
             <input
                 type="checkbox"
@@ -14,9 +21,15 @@
     @endif
 
     @foreach ($columns as $column)
+        @php
+            $thStyle = trim(($this->frozenColumnStyle($column, $columns) ?? '').' '.$stickyHeaderStyle);
+            $thBgClass = $column->isFrozen()
+                ? $this->frozenTheadBackgroundClass().' '.$this->frozenRightEdgeClass($column, $columns)
+                : ($stickyHeaderActive ? $this->frozenTheadBackgroundClass() : '');
+        @endphp
         <th
-            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' '.$column->getThClass().' '.($column->isFrozen() ? $this->frozenTheadBackgroundClass().' '.$this->frozenRightEdgeClass($column, $columns) : '')) }}"
-            @if ($style = $this->frozenColumnStyle($column, $columns)) style="{{ $style }}" @endif
+            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' '.$column->getThClass().' '.$thBgClass) }}"
+            @if ($thStyle !== '') style="{{ $thStyle }}" @endif
         >
             @if ($column->getThView())
                 @include($column->getThView(), ['column' => $column])
@@ -49,6 +62,9 @@
     @endforeach
 
     @if (count($this->rowActions()) > 0)
-        <th class="{{ trim($this->thClasses().' '.$this->densityThClasses()) }} w-px"></th>
+        <th
+            class="{{ trim($this->thClasses().' '.$this->densityThClasses().' w-px '.($stickyHeaderActive ? $this->frozenTheadBackgroundClass() : '')) }}"
+            @if ($stickyHeaderActive) style="{{ $stickyHeaderStyle }}" @endif
+        ></th>
     @endif
 </tr>

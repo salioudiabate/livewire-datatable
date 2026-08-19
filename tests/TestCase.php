@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salioudiabate\LivewireDatatable\Tests;
 
+use Barryvdh\DomPDF\ServiceProvider as DomPDFServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Livewire\LivewireServiceProvider;
@@ -25,6 +26,7 @@ class TestCase extends Orchestra
         return [
             LivewireServiceProvider::class,
             ExcelServiceProvider::class,
+            DomPDFServiceProvider::class,
             LivewireDataTableServiceProvider::class,
         ];
     }

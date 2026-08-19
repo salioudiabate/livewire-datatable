@@ -1,4 +1,11 @@
-<tr class="{{ $this->tbodyTrClasses() }}" wire:key="dt-row-{{ data_get($row, 'id') ?? $loop->index }}">
+@php($rowUrl = $this->rowUrl($row))
+<tr
+    class="{{ trim($this->tbodyTrClasses().' '.($rowUrl ? 'cursor-pointer' : '')) }}"
+    wire:key="dt-row-{{ data_get($row, 'id') ?? $loop->index }}"
+    @if ($rowUrl)
+        x-on:click="if (! $event.target.closest('a, button, input, select, textarea, label')) { window.location = '{{ $rowUrl }}' }"
+    @endif
+>
     @if (count($this->authorizedBulkActions()) > 0)
         @php($rowKey = $this->resolveRowKey($row))
         <td

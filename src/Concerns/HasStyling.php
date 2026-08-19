@@ -81,6 +81,19 @@ trait HasStyling
         return (string) config('livewire-datatable.classes.empty_state', '');
     }
 
+    /**
+     * A view name to render instead of the built-in "No results found"
+     * message — receives $columns and $colspan, the same as the default
+     * partial, so a custom one can still colspan the row correctly. Useful
+     * for a call-to-action ("No products yet — create one") rather than a
+     * flat empty message. Returning null (the default) keeps the built-in
+     * message.
+     */
+    public function emptyStateView(): ?string
+    {
+        return null;
+    }
+
     public function columnsDropdownClasses(): string
     {
         return (string) config('livewire-datatable.classes.columns_dropdown', '');

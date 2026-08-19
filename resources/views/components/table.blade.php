@@ -1,4 +1,10 @@
-<div class="dt-root {{ $this->rootClasses() }}" x-data="{ filtersOpen: @js($this->filtersDefaultOpen()) }">
+<div
+    class="dt-root {{ $this->rootClasses() }}"
+    x-data="{ filtersOpen: @js($this->filtersDefaultOpen()) }"
+    @if ($this->pollInterval())
+        wire:poll.{{ $this->pollInterval() }}ms="$refresh"
+    @endif
+>
     @include('livewire-datatable::components.theme-style')
 
     @include('livewire-datatable::components.toolbar', ['filters' => $filters])

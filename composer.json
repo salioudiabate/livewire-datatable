@@ -28,6 +28,7 @@
         "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
+        "barryvdh/laravel-dompdf": "^3.1",
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.18",
         "maatwebsite/excel": "^4.0",
@@ -38,7 +39,8 @@
         "pestphp/pest-plugin-livewire": "^4.1"
     },
     "suggest": {
-        "maatwebsite/excel": "Required to use the built-in ExcelExporter instead of the default CsvExporter (see the README's Export section)."
+        "maatwebsite/excel": "Required to use the built-in ExcelExporter instead of the default CsvExporter (see the README's Export section).",
+        "barryvdh/laravel-dompdf": "Required to use the built-in PdfExporter instead of the default CsvExporter (see the README's Export section)."
     },
     "autoload": {
         "psr-4": {

@@ -48,14 +48,17 @@ class UsersTable extends DataTableComponent
 - [Filters](#filters)
 - [Sorting](#sorting)
 - [Search & pagination](#search--pagination)
+- [Auto-refresh](#auto-refresh)
 - [URL binding](#url-binding)
 - [Selection & bulk actions](#selection--bulk-actions)
 - [Bulk delete](#bulk-delete)
 - [Column visibility](#column-visibility)
 - [Row density](#row-density)
 - [Frozen columns](#frozen-columns)
+- [Sticky header](#sticky-header)
 - [Export](#export)
 - [Row actions](#row-actions)
+- [Clickable rows](#clickable-rows)
 - [Toolbar actions](#toolbar-actions)
 - [Theming](#theming)
 - [Styling hooks](#styling-hooks)
@@ -300,6 +303,19 @@ public function perPageOptions(): array
 }
 ```
 
+## Auto-refresh
+
+Off by default — opt in for dashboard-style tables that should refresh themselves:
+
+```php
+public function pollInterval(): ?int
+{
+    return 5000; // milliseconds
+}
+```
+
+Wires Livewire's own `wire:poll` onto the table rather than reinventing polling, so all of Livewire's usual polling behavior applies (it pauses in a background browser tab, for instance).
+
 ## URL binding
 
 Search, filters, sort, and pagination state are bound to the query string by default, with a key prefix derived from the component's class name (`Str::kebab(class_basename(...))`) — so state survives a refresh and is shareable via URL.
@@ -454,6 +470,28 @@ Frozen columns must be a **leading, contiguous run** — `Column::make('Email', 
 
 The reserved width for that checkbox column (`config('livewire-datatable.frozen_checkbox_width')`) and the frozen-cell background/edge-shadow classes (`config('livewire-datatable.classes.frozen_thead_bg')` etc.) are configurable if you've changed the table's overall padding or colors.
 
+## Sticky header
+
+The vertical counterpart to frozen columns — keeps the header row visible while a *tall* table scrolls, instead of the header scrolling away with the rest of the content. Off by default:
+
+```php
+public function stickyHeader(): bool
+{
+    return true;
+}
+```
+
+If your app has its own fixed/sticky navbar, the table header will stick right underneath it unless you offset it:
+
+```php
+protected function stickyHeaderOffset(): int
+{
+    return 64; // px — your navbar's height
+}
+```
+
+Combines correctly with frozen columns — a column that's both frozen and in a sticky header gets both `position: sticky` offsets (`left` and `top`) at once, not one replacing the other.
+
 ## Export
 
 A CSV export button appears in the toolbar automatically (`showExport()`, default `true`). Its label comes from the `export` translation by default — override `exportLabel(): string` per-table for anything else. It streams the **current filtered view** (search + filters applied, not just the current page) in chunks — never materializing the whole result set in memory:
@@ -493,6 +531,24 @@ protected function exportFilename(): string
 
 It reads the DataSource in the same chunked fashion as `CsvExporter` (never a single `get()`-everything call), and honors `Column::exportUsing()`/`exportValue()` identically. Note this bounds *read* memory only — the XLSX format itself isn't row-streamable, so PhpSpreadsheet still holds the workbook in memory while writing it. For very large exports, prefer CSV.
 
+Want a printable PDF instead? `Salioudiabate\LivewireDatatable\Export\PdfExporter` ships with the package (built on [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf), an optional dependency — `composer require barryvdh/laravel-dompdf` first):
+
+```php
+use Salioudiabate\LivewireDatatable\Export\PdfExporter;
+
+protected function exporter(): Exporter
+{
+    return new PdfExporter();
+}
+
+protected function exportFilename(): string
+{
+    return 'users-'.now()->format('Y-m-d').'.pdf';
+}
+```
+
+Unlike CSV or Excel, dompdf has no streaming render API at all — the full row set is held in memory and the whole document rendered before a single byte is sent, bounding neither read nor write memory the way the other two exporters do. This is meant for a print-friendly report on a reasonably sized (typically already-filtered) result set, not bulk data export — prefer `CsvExporter` for that. It's also the natural pairing for `submit()` (see [Toolbar actions](#toolbar-actions)) when you want the PDF to open in a new tab from a real form post rather than a Livewire-driven download.
+
 Need a different format entirely? Implement `Exporter` yourself and return it from `exporter()` — its `export()` method returns a Symfony `Response`, so anything from a streamed CSV to a full file download works.
 
 The chunk size both built-in exporters read at a time is `config('livewire-datatable.export.chunk_size')` (default `1000`) — lower it if individual rows are unusually large.
@@ -524,6 +580,19 @@ public function deleteUser(string $id): void
 ```
 
 Need a per-row action that hands back a real HTTP response instead of an AJAX diff (a per-row generated PDF, say)? `RowAction::submit()` works the same way as `ToolbarAction::submit()` — see [Toolbar actions](#toolbar-actions).
+
+## Clickable rows
+
+The whole "click anywhere on the row to open it" pattern, independent of `RowAction` — off by default:
+
+```php
+public function rowUrl(mixed $row): ?string
+{
+    return route('users.edit', $row);
+}
+```
+
+A click anywhere on the row navigates, *except* when it lands on an interactive element inside it (a checkbox, a row action button, a link in a formatted cell) — those still work normally, the row-level navigation only fires for clicks that don't land on one. Return `null` for a specific row (an archived one, say) to leave just that row non-clickable while the rest of the table still navigates.
 
 ## Toolbar actions
 
@@ -651,6 +720,25 @@ Whatever a hook returns becomes the *entire* class list for that element — the
 Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`.
 
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
+
+Need more than a class change on the empty state — a call-to-action instead of a flat message ("No products yet — create one")? `emptyStateView(): ?string` replaces the whole thing with a view of your own, receiving `$columns` and `$colspan` so it can still span the row correctly:
+
+```php
+public function emptyStateView(): ?string
+{
+    return 'partials.no-products-yet';
+}
+```
+
+```blade
+{{-- resources/views/partials/no-products-yet.blade.php --}}
+<tr>
+    <td colspan="{{ $colspan }}" class="px-4 py-10 text-center">
+        <p class="text-sm text-slate-500">No products yet.</p>
+        <a href="{{ route('products.create') }}" class="mt-2 inline-block text-sm font-medium text-[var(--dt-primary,#4f46e5)]">Create your first one →</a>
+    </td>
+</tr>
+```
 
 One hook is global-only, with no per-table method: `config('livewire-datatable.classes.pagination_bar')`. Laravel renders the paginator's view (`tailwind.blade.php` / `simple-tailwind.blade.php`) in its own context outside the component's Blade scope, so it can't reach `$this` on your component — it applies to every table in the app.
 
