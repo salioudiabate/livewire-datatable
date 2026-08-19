@@ -72,7 +72,7 @@
                         aria-pressed="{{ $this->density === $option ? 'true' : 'false' }}"
                         aria-label="{{ __('livewire-datatable::livewire-datatable.density_'.$option) }}"
                         title="{{ __('livewire-datatable::livewire-datatable.density_'.$option) }}"
-                        class="px-2.5 py-2 transition-colors duration-150 {{ $this->density === $option ? 'bg-[var(--dt-primary,#4f46e5)] text-[var(--dt-primary-text,#ffffff)]' : 'text-slate-500 hover:bg-slate-50' }}"
+                        class="flex h-9 w-9 items-center justify-center transition-colors duration-150 {{ $this->density === $option ? 'bg-[var(--dt-primary,#4f46e5)] text-[var(--dt-primary-text,#ffffff)]' : 'text-slate-500 hover:bg-slate-50' }}"
                     >
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-width="2" d="{{ $densityIconPaths[$option] ?? '' }}" />
