@@ -236,7 +236,7 @@ Dot-notation fields (`'author.name'`) work for display and for the default Eloqu
 
 ## Filters
 
-Eight built-in types, all sharing the same contract — each owns its own tiny Blade partial and its own portable default behavior (no `getType()` switch anywhere in the core views, so adding a filter type never requires touching the package itself):
+Nine built-in types, all sharing the same contract — each owns its own tiny Blade partial and its own portable default behavior (no `getType()` switch anywhere in the core views, so adding a filter type never requires touching the package itself):
 
 ```php
 use Salioudiabate\LivewireDatatable\Filters\{
@@ -269,6 +269,28 @@ SelectFilter::make('Status', 'status')->using(
 
 The "Filters" toolbar button's own label comes from the `filters` translation by default — override `filtersLabel(): string` per-table for anything else.
 
+### Async select (searchable, remote options)
+
+`SelectFilter`/`MultiSelectFilter` need every option loaded upfront — fine for a status enum, unusable for a "Customer" filter over 50k rows. `AsyncSelectFilter` resolves its options on demand from whatever's currently typed in its search box, instead of a fixed array:
+
+```php
+use Salioudiabate\LivewireDatatable\Filters\AsyncSelectFilter;
+
+AsyncSelectFilter::make('Client', 'customer_id')
+    ->optionsUsing(fn (string $term) => Customer::query()
+        ->when($term !== '', fn ($query) => $query->where('name', 'like', "%{$term}%"))
+        ->limit(20)
+        ->pluck('name', 'id')
+        ->all())
+    ->labelUsing(fn (mixed $value) => Customer::find($value)?->name),
+```
+
+`optionsUsing()` receives the current search term (empty string until the box has been typed in) and returns `[value => label, ...]`, same shape as `SelectFilter::options()`. It re-runs on every render while the box is focused (300ms debounce, same as `TextFilter`) — the same DataTableComponent render cycle as everything else, no separate route or controller to wire up.
+
+The tricky part any async select has to solve: once a value is selected, the option list that produced it is gone — a fresh search for `''` (or whatever's currently typed) may not include it at all. `labelUsing()` resolves *just that one value* back to a label for display, independently of the current search. Skip it and the raw stored value is shown instead — fine for something already legible (a slug), not for a database id.
+
+`apply()` behavior is identical to `SelectFilter`: an exact match, `null`/`''` treated as inactive.
+
 ### Styling filter inputs
 
 Every filter input is styled from config by default (`filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()` — see [Styling hooks](#styling-hooks)), with a per-filter escape hatch on top:
@@ -279,7 +301,7 @@ SelectFilter::make('Statut', 'status')
     ->cssClass('rounded-lg border border-amber-300 bg-amber-50 py-2 pl-3 pr-8 text-sm text-amber-900'),
 ```
 
-`cssClass()` full-replaces that one filter's input classes (both halves, for a range filter) — it doesn't merge with the default, same as every other `cssClass()` hook in the package. Which default it replaces depends on the filter's shape: `filterInputClasses()` for text/number/date/range inputs, `filterSelectClasses()` for `SelectFilter`/`BooleanFilter`'s single dropdown, `filterMultiSelectClasses()` for `MultiSelectFilter`'s native multi-select (no chevron overlay, so it needs different padding than a single select).
+`cssClass()` full-replaces that one filter's input classes (both halves, for a range filter) — it doesn't merge with the default, same as every other `cssClass()` hook in the package. Which default it replaces depends on the filter's shape: `filterInputClasses()` for text/number/date/range inputs, `filterSelectClasses()` for `SelectFilter`/`BooleanFilter`'s single dropdown, `filterMultiSelectClasses()` for `MultiSelectFilter`'s native multi-select (no chevron overlay, so it needs different padding than a single select), and `filterSelectClasses()` again for `AsyncSelectFilter`'s trigger button.
 
 ## Sorting
 

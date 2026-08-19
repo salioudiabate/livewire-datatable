@@ -14,6 +14,17 @@ trait HasFilters
      */
     public array $filterValues = [];
 
+    /**
+     * Per-AsyncSelectFilter search box text, keyed by filter key — separate
+     * from filterValues since it drives what the dropdown *shows*, not what
+     * the table is actually filtered by. Deliberately excluded from
+     * queryString() (HasUrlBinding): it's transient typing state, not
+     * something worth a shareable URL.
+     *
+     * @var array<string, string>
+     */
+    public array $filterSearchTerms = [];
+
     abstract protected function onTableStateChanged(): void;
 
     /**
@@ -37,6 +48,7 @@ trait HasFilters
     public function resetFilters(): void
     {
         $this->filterValues = [];
+        $this->filterSearchTerms = [];
         $this->onTableStateChanged();
     }
 

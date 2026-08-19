@@ -34,4 +34,6 @@ return [
     'density_comfortable' => 'Comfortable',
     'density_spacious' => 'Spacious',
     'page_of' => 'Page :current of :last',
+    'select_option' => 'Select an option...',
+    'no_options' => 'No matching options',
 ];

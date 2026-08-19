@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Salioudiabate\LivewireDatatable\DataSources\CollectionDataSource;
 use Salioudiabate\LivewireDatatable\DataSources\QueryBuilderDataSource;
+use Salioudiabate\LivewireDatatable\Filters\AsyncSelectFilter;
 use Salioudiabate\LivewireDatatable\Filters\BooleanFilter;
 use Salioudiabate\LivewireDatatable\Filters\DateFilter;
 use Salioudiabate\LivewireDatatable\Filters\DateRangeFilter;
@@ -194,6 +195,57 @@ it('NumberRangeFilter applies >= and <= across both bounds', function () {
     expect($result->total)->toBe(1);
 });
 
+// --- AsyncSelectFilter -------------------------------------------------
+
+it('AsyncSelectFilter applies the same exact-match behavior as SelectFilter', function () {
+    $filter = AsyncSelectFilter::make('Status', 'status')
+        ->optionsUsing(fn (string $term) => ['draft' => 'Draft', 'published' => 'Published']);
+
+    $result = $filter->apply(filterTestSource(), ['status' => 'published'])->paginate(10, 1);
+
+    expect($result->total)->toBe(2);
+});
+
+it('AsyncSelectFilter ignores an empty value, same as SelectFilter', function () {
+    $filter = AsyncSelectFilter::make('Status', 'status')
+        ->optionsUsing(fn (string $term) => []);
+
+    $result = $filter->apply(filterTestSource(), ['status' => ''])->paginate(10, 1);
+
+    expect($result->total)->toBe(3);
+});
+
+it('AsyncSelectFilter passes the current search term through to the resolver', function () {
+    $filter = AsyncSelectFilter::make('Status', 'status')
+        ->optionsUsing(fn (string $term) => collect(['draft' => 'Draft', 'published' => 'Published'])
+            ->filter(fn (string $label) => str_contains(strtolower($label), strtolower($term)))
+            ->all());
+
+    expect($filter->searchOptions(''))->toBe(['draft' => 'Draft', 'published' => 'Published'])
+        ->and($filter->searchOptions('dra'))->toBe(['draft' => 'Draft'])
+        ->and($filter->searchOptions('zzz'))->toBe([]);
+});
+
+it('AsyncSelectFilter returns no options when optionsUsing() was never called', function () {
+    $filter = AsyncSelectFilter::make('Status', 'status');
+
+    expect($filter->searchOptions('anything'))->toBe([]);
+});
+
+it('AsyncSelectFilter resolves the selected value to a raw string by default, and via labelUsing() when set', function () {
+    $withoutLabelResolver = AsyncSelectFilter::make('Status', 'status');
+    $withLabelResolver = AsyncSelectFilter::make('Status', 'status')
+        ->labelUsing(fn (string $value) => match ($value) {
+            'draft' => 'Draft',
+            'published' => 'Published',
+            default => null,
+        });
+
+    expect($withoutLabelResolver->resolveLabel('draft'))->toBe('draft')
+        ->and($withLabelResolver->resolveLabel('draft'))->toBe('Draft')
+        ->and($withLabelResolver->resolveLabel('archived'))->toBe('archived'); // labelUsing() returned null, falls back to raw value
+});
+
 // --- Every filter type exposes a distinct, stable view name ----------------
 
 it('every built-in filter type resolves to its own dedicated Blade partial', function () {
@@ -204,5 +256,6 @@ it('every built-in filter type resolves to its own dedicated Blade partial', fun
         ->and(MultiSelectFilter::make('l', 'k')->view())->toBe('livewire-datatable::filters.multi-select')
         ->and(NumberFilter::make('l', 'k')->view())->toBe('livewire-datatable::filters.number')
         ->and(NumberRangeFilter::make('l', 'k')->view())->toBe('livewire-datatable::filters.number-range')
-        ->and(BooleanFilter::make('l', 'k')->view())->toBe('livewire-datatable::filters.boolean');
+        ->and(BooleanFilter::make('l', 'k')->view())->toBe('livewire-datatable::filters.boolean')
+        ->and(AsyncSelectFilter::make('l', 'k')->view())->toBe('livewire-datatable::filters.async-select');
 });
