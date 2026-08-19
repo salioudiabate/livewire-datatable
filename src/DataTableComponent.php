@@ -20,6 +20,7 @@ use Salioudiabate\LivewireDatatable\Concerns\HasSearch;
 use Salioudiabate\LivewireDatatable\Concerns\HasSelection;
 use Salioudiabate\LivewireDatatable\Concerns\HasSorting;
 use Salioudiabate\LivewireDatatable\Concerns\HasStyling;
+use Salioudiabate\LivewireDatatable\Concerns\HasToolbarActions;
 use Salioudiabate\LivewireDatatable\Concerns\HasUrlBinding;
 use Salioudiabate\LivewireDatatable\Concerns\ResolvesDataSource;
 
@@ -46,6 +47,7 @@ abstract class DataTableComponent extends Component
     use HasSelection;
     use HasSorting;
     use HasStyling;
+    use HasToolbarActions;
     use HasUrlBinding;
     use ResolvesDataSource;
 

@@ -55,6 +55,7 @@ class UsersTable extends DataTableComponent
 - [Frozen columns](#frozen-columns)
 - [Export](#export)
 - [Row actions](#row-actions)
+- [Toolbar actions](#toolbar-actions)
 - [Theming](#theming)
 - [Styling hooks](#styling-hooks)
 - [Translations](#translations)
@@ -474,6 +475,47 @@ public function deleteUser(string $id): void
 }
 ```
 
+## Toolbar actions
+
+Custom buttons in the toolbar itself — independent of `RowAction` (per row) and `BulkAction` (per selection) — for things like "New record", "Import", or "Refresh" that aren't tied to any particular row:
+
+```php
+use Salioudiabate\LivewireDatatable\ToolbarAction;
+use Salioudiabate\LivewireDatatable\ToolbarActionGroup;
+
+public function toolbarActions(): array
+{
+    return [
+        ToolbarAction::make('New product')
+            ->dispatch('openModal', ['component' => 'product.create-modal'])  // fires Livewire's $dispatch()
+            ->cssClass('bg-[var(--dt-primary,#4f46e5)] text-white hover:opacity-90')
+            ->permission('products.create'),
+
+        ToolbarAction::make('Docs')->url('https://example.com/docs', target: '_blank')->align('left'),
+
+        ToolbarActionGroup::make([
+            ToolbarAction::make('Sort by price')->action('sortByPrice'),
+            ToolbarAction::make('Sort by stock')->action('sortByStock'),
+        ]),
+    ];
+}
+
+public function sortByPrice(): void
+{
+    $this->sortBy('price');
+}
+```
+
+Exactly one trigger is expected per action:
+
+- `->url($href, target: null)` — a plain link.
+- `->dispatch($event, $params = [])` — fires Livewire's `$dispatch()`, the same mechanism used to open a modal system, trigger a listener on another component, etc.
+- `->action($method)` — a `wire:click` call on this component, dispatched through `runToolbarAction($method)`, which re-checks `permission()` before invoking it (the same defensive pattern as `runBulkAction()` — a button not being rendered isn't the same as the action being protected).
+
+`->align('left' | 'right')` (default `right`) places the action alongside search/filters or alongside columns/export/density — group actions with `ToolbarActionGroup::make([...])` to render them as one segmented control (the same visual language as the built-in density toggle) instead of separate buttons; a group with no authorized actions left in it renders nothing at all.
+
+Styling follows the same hooks as everything else: `->cssClass()` on the action (or group) overrides the default, which otherwise comes from `toolbarActionClasses()` / `toolbarActionGroupClasses()` (see [Styling hooks](#styling-hooks)).
+
 ## Theming
 
 Colors are CSS custom properties (`--dt-primary`, `--dt-primary-hover`, `--dt-primary-dark`, `--dt-primary-light`, `--dt-primary-text`) scoped to a `.dt-root` wrapper — never the global `:root` — so the package can never silently override your application's own theme variables.
@@ -527,7 +569,7 @@ protected function toolbarClasses(): string
 
 Whatever a hook returns becomes the *entire* class list for that element — there's no merging with a package default. That's deliberate: it's what makes every compartment genuinely restylable rather than only extendable, but it also means structural utilities the compartment needs to work (`overflow-x-auto`, `flex`, `overflow-hidden`, etc.) are your responsibility to keep if you touch one of these.
 
-Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`.
+Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`.
 
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
 

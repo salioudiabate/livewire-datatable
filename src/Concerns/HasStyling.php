@@ -90,4 +90,22 @@ trait HasStyling
     {
         return (string) config('livewire-datatable.classes.error_state', '');
     }
+
+    /**
+     * Default classes for a standalone ToolbarAction button — overridden
+     * per-action by ToolbarAction::cssClass() when set.
+     */
+    public function toolbarActionClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.toolbar_action', '');
+    }
+
+    /**
+     * Wrapper classes for a ToolbarActionGroup's segmented control —
+     * overridden per-group by ToolbarActionGroup::cssClass() when set.
+     */
+    public function toolbarActionGroupClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.toolbar_action_group', '');
+    }
 }
