@@ -90,6 +90,14 @@
             </div>
         @endif
 
+        @foreach ($this->toolbarActions() as $item)
+            @if ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarActionGroup && $item->getAlign() === 'right')
+                @include('livewire-datatable::components.toolbar-action-group', ['group' => $item])
+            @elseif ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarAction && $item->getAlign() === 'right' && $item->isAuthorized())
+                @include('livewire-datatable::components.toolbar-action', ['action' => $item, 'mode' => 'standalone'])
+            @endif
+        @endforeach
+
         @if ($this->showPerPage())
             <div class="relative">
                 <select
@@ -106,13 +114,5 @@
                 </svg>
             </div>
         @endif
-
-        @foreach ($this->toolbarActions() as $item)
-            @if ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarActionGroup && $item->getAlign() === 'right')
-                @include('livewire-datatable::components.toolbar-action-group', ['group' => $item])
-            @elseif ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarAction && $item->getAlign() === 'right' && $item->isAuthorized())
-                @include('livewire-datatable::components.toolbar-action', ['action' => $item, 'mode' => 'standalone'])
-            @endif
-        @endforeach
     </div>
 </div>
