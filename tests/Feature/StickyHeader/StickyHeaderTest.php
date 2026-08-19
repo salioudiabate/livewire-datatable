@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use Salioudiabate\LivewireDatatable\Tests\Fixtures\Components\FrozenColumnsPostsTable;
 use Salioudiabate\LivewireDatatable\Tests\Fixtures\Components\PostsTable;
+use Salioudiabate\LivewireDatatable\ToolbarAction;
+use Salioudiabate\LivewireDatatable\ToolbarActionGroup;
 
 beforeEach(function () {
     DB::table('dt_test_posts')->insert([
@@ -72,4 +74,28 @@ it('gives every sticky header cell an opaque background so scrolled content does
     })->html();
 
     expect(substr_count($html, 'bg-slate-50'))->toBeGreaterThanOrEqual(3); // thead itself + each <th>
+});
+
+it('gives the toolbar action dropdown a higher z-index than the sticky header, so an open menu paints on top instead of underneath it', function () {
+    $html = Livewire::test(new class extends PostsTable
+    {
+        public function stickyHeader(): bool
+        {
+            return true;
+        }
+
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([
+                    ToolbarAction::make('A')->action('ping'),
+                ])->dropdown('Trier par...'),
+            ];
+        }
+
+        public function ping(): void {}
+    })->html();
+
+    expect($html)->toContain('position: sticky; top: 0; z-index: 10;')
+        ->and($html)->toContain('z-20'); // toolbar_action_dropdown — must outrank the header's z-10
 });

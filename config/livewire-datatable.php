@@ -89,7 +89,10 @@ return [
         'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm',
         'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm text-slate-700',
         'empty_state' => 'px-4 py-10 text-center',
-        'columns_dropdown' => 'absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
+        // z-20: must outrank the sticky header's z-index: 10 (HasStickyHeader)
+        // — equal values would let the header win on DOM order and paint
+        // over this panel, since <thead> renders after the toolbar.
+        'columns_dropdown' => 'absolute right-0 z-20 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
         'error_state' => 'rounded-xl border border-red-200 bg-red-50 p-6 text-center',
 
         // Custom toolbar buttons/groups declared via toolbarActions().
@@ -108,8 +111,10 @@ return [
         // of the items' fixed height, landing at the same 38px total.
         'toolbar_action_group' => 'flex items-center divide-x divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white',
         // The open menu panel for ToolbarActionGroup::dropdown() — same
-        // look as the built-in Columns dropdown panel.
-        'toolbar_action_dropdown' => 'absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
+        // look as the built-in Columns dropdown panel. z-20 for the same
+        // reason as columns_dropdown above: must outrank the sticky
+        // header's z-index: 10.
+        'toolbar_action_dropdown' => 'absolute right-0 z-20 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
 
         // Global only — Laravel renders the paginator's view (tailwind.blade.php
         // / simple-tailwind.blade.php) in its own context, outside the
