@@ -30,6 +30,19 @@
                     >
                         {{ $action->getLabel() }}
                     </a>
+                @elseif ($action->resolveSubmitUrl($row) !== null)
+                    @include('livewire-datatable::components.action-submit-form', [
+                        'formAction' => $action->resolveSubmitUrl($row),
+                        'formMethod' => $action->getSubmitMethod(),
+                        'formData' => $action->resolveSubmitData($row),
+                        'formTarget' => $action->getTarget(),
+                        'formConfirm' => $action->getConfirmMessage(),
+                        'formLabel' => $action->getLabel(),
+                        'formIcon' => $action->getIcon(),
+                        'formClass' => 'block w-full px-3 py-1.5 text-left text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 '.$action->getCssClass(),
+                        'formCloseDropdown' => true,
+                        'formWrapperClass' => 'block w-full',
+                    ])
                 @else
                     <button
                         type="button"

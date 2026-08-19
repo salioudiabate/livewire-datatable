@@ -322,6 +322,8 @@ The header checkbox selects the current page only; once every row on the page is
 
 Every bulk action is dispatched through `runBulkAction($method)`, which re-checks `permission()` before invoking it — the button not being rendered is not the same as the action being protected, since Livewire actions are directly callable by name.
 
+Need to hand the current selection to a real server-side export instead — a PDF, a large CSV, anything that has to return a full HTTP response? `BulkAction::submit($action)` renders a real form post (the selected keys go along automatically as `selected[]`) instead of a `wire:click` — see [Toolbar actions](#toolbar-actions) for how `submit()` works and why it bypasses `runBulkAction()`'s re-check.
+
 By default, selection is keyed on each row's `id` field. Override `recordKey()` for anything else:
 
 ```php
@@ -475,6 +477,8 @@ public function deleteUser(string $id): void
 }
 ```
 
+Need a per-row action that hands back a real HTTP response instead of an AJAX diff (a per-row generated PDF, say)? `RowAction::submit()` works the same way as `ToolbarAction::submit()` — see [Toolbar actions](#toolbar-actions).
+
 ## Toolbar actions
 
 Custom buttons in the toolbar itself — independent of `RowAction` (per row) and `BulkAction` (per selection) — for things like "New record", "Import", or "Refresh" that aren't tied to any particular row:
@@ -511,6 +515,23 @@ Exactly one trigger is expected per action:
 - `->url($href, target: null)` — a plain link.
 - `->dispatch($event, $params = [])` — fires Livewire's `$dispatch()`, the same mechanism used to open a modal system, trigger a listener on another component, etc.
 - `->action($method)` — a `wire:click` call on this component, dispatched through `runToolbarAction($method)`, which re-checks `permission()` before invoking it (the same defensive pattern as `runBulkAction()` — a button not being rendered isn't the same as the action being protected).
+- `->submit($action, $method = 'POST', $data = [], $target = null)` — a real, non-AJAX HTML form post. `action()`/`dispatch()` both stay inside Livewire's AJAX request cycle, which can't hand back a full HTTP response — no streaming a generated file, no opening a new tab on the result. `submit()` renders an actual `<form>` instead, so server work that needs to do that (build a PDF and render it in `target: '_blank'`, trigger a real file download, etc.) has a normal request/response round trip to work with:
+
+    ```php
+    ToolbarAction::make('Export as PDF')
+        ->submit(
+            action: route('products.export-pdf'),
+            data: fn () => ['status' => $this->filterValues['status'] ?? null, 'search' => $this->search],
+            target: '_blank',
+        )
+        ->confirm('Generate a PDF of the current results?'),
+    ```
+
+    `$data` may be a closure so it's resolved against the component's *current* state (filters, search...) at render time rather than once when the action is declared. CSRF is added automatically for anything but `GET`; `PUT`/`PATCH`/`DELETE` are spoofed via a `_method` field the same way Blade's `@method()` does, since HTML forms only support `GET`/`POST` natively. The button shows a small spinner and disables itself while the browser is submitting (there's no `wire:loading` for a real form post, so this is the package's own stand-in — it auto-resets after 8s since there's no way to know when a new tab has finished loading).
+
+    **`submit()` bypasses `runToolbarAction()`/`runBulkAction()` entirely** — the form posts straight to `$action`, never touching this component. `->permission()` still hides the button from unauthorized users, but the *server-side* re-check has to live on the target route itself (middleware, a policy, whatever you'd normally use), the same as it would for any other route in your app. This is a deliberate trade-off, not an oversight: submitting outside Livewire's request cycle is exactly what makes a full response possible.
+
+    `RowAction::submit(fn ($row) => $url, $method = 'POST', ?fn ($row) => $data = null, $target = null)` and `BulkAction::submit($action, $method = 'POST', $data = [], $target = null)` work the same way — a per-row PDF, or exporting the current selection, follow the identical pattern. `BulkAction::submit()` always sends the selected keys as `selected[]` alongside `$data`, so you don't need to include them yourself.
 
 `->align('left' | 'right')` (default `right`) places the action alongside search/filters or alongside columns/export/density — group actions with `ToolbarActionGroup::make([...])` to render them as one segmented control (the same visual language as the built-in density toggle) instead of separate buttons; a group with no authorized actions left in it renders nothing at all.
 

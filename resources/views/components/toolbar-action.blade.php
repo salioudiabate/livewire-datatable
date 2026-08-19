@@ -35,6 +35,19 @@
         @endif
         {{ $action->getLabel() }}
     </button>
+@elseif ($action->getTrigger() === 'submit')
+    @include('livewire-datatable::components.action-submit-form', [
+        'formAction' => $action->getSubmitAction(),
+        'formMethod' => $action->getSubmitMethod(),
+        'formData' => $action->getSubmitData(),
+        'formTarget' => $action->getTarget(),
+        'formConfirm' => $action->getConfirmMessage(),
+        'formLabel' => $action->getLabel(),
+        'formIcon' => $action->getIcon(),
+        'formClass' => $toolbarActionClass,
+        'formCloseDropdown' => $toolbarActionMode === 'dropdown-item',
+        'formWrapperClass' => $toolbarActionMode === 'dropdown-item' ? 'block w-full' : 'inline-flex',
+    ])
 @else
     <button
         type="button"

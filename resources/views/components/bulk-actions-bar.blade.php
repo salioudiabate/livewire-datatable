@@ -6,17 +6,30 @@
 
         <div class="flex flex-wrap items-center gap-2">
             @foreach ($this->authorizedBulkActions() as $action)
-                <button
-                    type="button"
-                    @if ($action->needsConfirmation())
-                        x-on:click="confirm('{{ $action->getConfirmMessage() }}') && $wire.runBulkAction('{{ $action->getMethod() }}')"
-                    @else
-                        wire:click="runBulkAction('{{ $action->getMethod() }}')"
-                    @endif
-                    class="{{ $action->getCssClass() !== '' ? $action->getCssClass() : 'rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50' }}"
-                >
-                    {{ $action->getLabel() }}
-                </button>
+                @if ($action->getSubmitAction() !== null)
+                    @include('livewire-datatable::components.action-submit-form', [
+                        'formAction' => $action->getSubmitAction(),
+                        'formMethod' => $action->getSubmitMethod(),
+                        'formData' => array_merge(['selected' => $this->selected], $action->getSubmitData()),
+                        'formTarget' => $action->getTarget(),
+                        'formConfirm' => $action->getConfirmMessage(),
+                        'formLabel' => $action->getLabel(),
+                        'formIcon' => $action->getIcon(),
+                        'formClass' => $action->getCssClass() !== '' ? $action->getCssClass() : 'rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50',
+                    ])
+                @else
+                    <button
+                        type="button"
+                        @if ($action->needsConfirmation())
+                            x-on:click="confirm('{{ $action->getConfirmMessage() }}') && $wire.runBulkAction('{{ $action->getMethod() }}')"
+                        @else
+                            wire:click="runBulkAction('{{ $action->getMethod() }}')"
+                        @endif
+                        class="{{ $action->getCssClass() !== '' ? $action->getCssClass() : 'rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50' }}"
+                    >
+                        {{ $action->getLabel() }}
+                    </button>
+                @endif
             @endforeach
         </div>
 

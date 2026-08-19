@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salioudiabate\LivewireDatatable;
 
+use Closure;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -11,8 +12,11 @@ use Illuminate\Support\Facades\Gate;
  * bulk-selection (BulkAction) actions the package already ships. Exactly
  * one trigger is expected: url() (plain link), dispatch() (fires a
  * Livewire event — e.g. $dispatch('openModal', [...]) to open a host
- * app's own modal system), or action() (a wire:click method call on this
- * component). Precedence when more than one is set: url > dispatch > action.
+ * app's own modal system), action() (a wire:click method call on this
+ * component), or submit() (a real, non-AJAX HTML form post — for server
+ * work Livewire's own AJAX cycle can't carry, like streaming a generated
+ * PDF back as the response of a new tab). Precedence when more than one
+ * trigger is set: url > dispatch > submit > action.
  */
 final class ToolbarAction
 {
@@ -26,6 +30,15 @@ final class ToolbarAction
      * @var array<string, mixed>
      */
     private array $dispatchParams = [];
+
+    private ?string $submitAction = null;
+
+    private string $submitMethod = 'POST';
+
+    /**
+     * @var array<string, mixed>|Closure(): array<string, mixed>
+     */
+    private array|Closure $submitData = [];
 
     private ?string $method = null;
 
@@ -68,6 +81,27 @@ final class ToolbarAction
     public function action(string $method): static
     {
         $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * A real HTML form submission (not Livewire AJAX) — the only way for
+     * server-side work to send back a full HTTP response the browser can
+     * navigate to or open in a new tab, e.g. generating a PDF and
+     * rendering it in target: '_blank'. $data may be a closure so it's
+     * resolved against the component's current state (filters, search,
+     * selection...) at render time, not just once when the action is
+     * declared.
+     *
+     * @param  array<string, mixed>|Closure(): array<string, mixed>  $data
+     */
+    public function submit(string $action, string $method = 'POST', array|Closure $data = [], ?string $target = null): static
+    {
+        $this->submitAction = $action;
+        $this->submitMethod = strtoupper($method);
+        $this->submitData = $data;
+        $this->target = $target;
 
         return $this;
     }
@@ -140,6 +174,24 @@ final class ToolbarAction
         return $this->dispatchParams;
     }
 
+    public function getSubmitAction(): ?string
+    {
+        return $this->submitAction;
+    }
+
+    public function getSubmitMethod(): string
+    {
+        return $this->submitMethod;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSubmitData(): array
+    {
+        return $this->submitData instanceof Closure ? ($this->submitData)() : $this->submitData;
+    }
+
     public function getMethod(): ?string
     {
         return $this->method;
@@ -171,14 +223,15 @@ final class ToolbarAction
     }
 
     /**
-     * One of 'url', 'dispatch', 'action', or 'none' — determines which
-     * wiring the toolbar view renders.
+     * One of 'url', 'dispatch', 'submit', 'action', or 'none' — determines
+     * which wiring the toolbar view renders.
      */
     public function getTrigger(): string
     {
         return match (true) {
             $this->url !== null => 'url',
             $this->dispatchEvent !== null => 'dispatch',
+            $this->submitAction !== null => 'submit',
             $this->method !== null => 'action',
             default => 'none',
         };

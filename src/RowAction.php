@@ -9,13 +9,24 @@ use Closure;
 /**
  * Declarative sugar for a per-row actions dropdown — purely additive
  * alongside the existing Column::make('Actions', ...)->view(...) pattern,
- * not a replacement for it. Either a url() resolver (plain link) or an
- * action() method name (wire:click) is expected; url() takes precedence
- * when both are set.
+ * not a replacement for it. One of url() (plain link), submit() (a real,
+ * non-AJAX HTML form post — for server work that needs to hand back a
+ * full response, like a per-row generated PDF opened in a new tab), or
+ * action() (wire:click) is expected. Precedence when more than one is
+ * set: url > submit > action.
  */
 final class RowAction
 {
     private ?Closure $urlResolver = null;
+
+    private ?Closure $submitUrlResolver = null;
+
+    private string $submitMethod = 'POST';
+
+    /**
+     * @var (Closure(mixed): array<string, mixed>)|null
+     */
+    private ?Closure $submitDataResolver = null;
 
     private ?string $method = null;
 
@@ -52,6 +63,20 @@ final class RowAction
     public function action(string $method): static
     {
         $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * @param  Closure(mixed $row): string  $url
+     * @param  (Closure(mixed $row): array<string, mixed>)|null  $data
+     */
+    public function submit(Closure $url, string $method = 'POST', ?Closure $data = null, ?string $target = null): static
+    {
+        $this->submitUrlResolver = $url;
+        $this->submitMethod = strtoupper($method);
+        $this->submitDataResolver = $data;
+        $this->target = $target;
 
         return $this;
     }
@@ -129,6 +154,24 @@ final class RowAction
     public function resolveUrl(mixed $row): ?string
     {
         return $this->urlResolver !== null ? ($this->urlResolver)($row) : null;
+    }
+
+    public function resolveSubmitUrl(mixed $row): ?string
+    {
+        return $this->submitUrlResolver !== null ? ($this->submitUrlResolver)($row) : null;
+    }
+
+    public function getSubmitMethod(): string
+    {
+        return $this->submitMethod;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function resolveSubmitData(mixed $row): array
+    {
+        return $this->submitDataResolver !== null ? ($this->submitDataResolver)($row) : [];
     }
 
     public function isVisible(mixed $row): bool
