@@ -291,6 +291,35 @@ The tricky part any async select has to solve: once a value is selected, the opt
 
 `apply()` behavior is identical to `SelectFilter`: an exact match, `null`/`''` treated as inactive.
 
+### Dependent (cascading) filters
+
+Country → town → district, category → subcategory: there's no dedicated cascading API, but nothing needs to exist for one — `filters()` is a plain method re-invoked on every render, with full access to `$this->filterValues`, so a child filter's options can already be computed from whatever the parent is currently set to:
+
+```php
+public function filters(): array
+{
+    $country = $this->filterValues['country'] ?? null;
+
+    return [
+        SelectFilter::make('Country', 'country')->options(Country::pluck('name', 'code')->all()),
+        SelectFilter::make('Town', 'town')->options(
+            $country ? Town::where('country_code', $country)->pluck('name', 'id')->all() : []
+        ),
+    ];
+}
+```
+
+The one thing a real cascade needs beyond that — clearing the child's now-stale value once the parent changes — isn't a package concern either: updating a nested property like `filterValues.country` fires `updatedFilterValuesCountry()` natively, a built-in Livewire hook for any dotted property path:
+
+```php
+public function updatedFilterValuesCountry(): void
+{
+    unset($this->filterValues['town']);
+}
+```
+
+Both pieces compose with `AsyncSelectFilter` too — `optionsUsing()`'s closure has the same `$this` access, so a search box can filter by both the current term *and* a parent value at once.
+
 ### Styling filter inputs
 
 Every filter input is styled from config by default (`filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()` — see [Styling hooks](#styling-hooks)), with a per-filter escape hatch on top:
