@@ -269,6 +269,18 @@ SelectFilter::make('Status', 'status')->using(
 
 The "Filters" toolbar button's own label comes from the `filters` translation by default — override `filtersLabel(): string` per-table for anything else.
 
+### Styling filter inputs
+
+Every filter input is styled from config by default (`filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()` — see [Styling hooks](#styling-hooks)), with a per-filter escape hatch on top:
+
+```php
+SelectFilter::make('Statut', 'status')
+    ->options(['draft' => 'Brouillon', 'published' => 'Publié'])
+    ->cssClass('rounded-lg border border-amber-300 bg-amber-50 py-2 pl-3 pr-8 text-sm text-amber-900'),
+```
+
+`cssClass()` full-replaces that one filter's input classes (both halves, for a range filter) — it doesn't merge with the default, same as every other `cssClass()` hook in the package. Which default it replaces depends on the filter's shape: `filterInputClasses()` for text/number/date/range inputs, `filterSelectClasses()` for `SelectFilter`/`BooleanFilter`'s single dropdown, `filterMultiSelectClasses()` for `MultiSelectFilter`'s native multi-select (no chevron overlay, so it needs different padding than a single select).
+
 ## Sorting
 
 ```php
@@ -744,7 +756,7 @@ protected function toolbarClasses(): string
 
 Whatever a hook returns becomes the *entire* class list for that element — there's no merging with a package default. That's deliberate: it's what makes every compartment genuinely restylable rather than only extendable, but it also means structural utilities the compartment needs to work (`overflow-x-auto`, `flex`, `overflow-hidden`, etc.) are your responsibility to keep if you touch one of these.
 
-Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`, `footerWrapperClasses()`, `footerItemClasses()`.
+Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`, `footerWrapperClasses()`, `footerItemClasses()`, `filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()` (see [Filters](#filters) for the per-filter `cssClass()` override).
 
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
 

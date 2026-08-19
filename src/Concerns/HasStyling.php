@@ -148,4 +148,43 @@ trait HasStyling
     {
         return (string) config('livewire-datatable.classes.footer_item', '');
     }
+
+    /**
+     * The <label> above a filter's input(s) — shared by every filter type.
+     */
+    public function filterLabelClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.filter_label', '');
+    }
+
+    /**
+     * Default classes for a plain text-like filter input: TextFilter,
+     * NumberFilter, DateFilter, and both halves of NumberRangeFilter/
+     * DateRangeFilter. Overridden per-filter by Filter::cssClass() when set.
+     */
+    public function filterInputClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.filter_input', '');
+    }
+
+    /**
+     * Default classes for a single-value dropdown filter: SelectFilter and
+     * BooleanFilter — both render a <select> with a custom chevron overlay.
+     * Overridden per-filter by Filter::cssClass() when set.
+     */
+    public function filterSelectClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.filter_select', '');
+    }
+
+    /**
+     * Default classes for MultiSelectFilter's native <select multiple> —
+     * kept distinct from filterSelectClasses() since it has no chevron
+     * overlay and different vertical padding. Overridden per-filter by
+     * Filter::cssClass() when set.
+     */
+    public function filterMultiSelectClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.filter_multiselect', '');
+    }
 }

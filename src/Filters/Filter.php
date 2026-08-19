@@ -12,6 +12,8 @@ abstract class Filter implements FilterContract
 {
     protected ?Closure $using = null;
 
+    protected ?string $cssClass = null;
+
     final public function __construct(
         protected readonly string $label,
         protected readonly string $key,
@@ -20,6 +22,26 @@ abstract class Filter implements FilterContract
     public static function make(string $label, string $key): static
     {
         return new static($label, $key);
+    }
+
+    /**
+     * Overrides the default input classes (HasStyling's filterInputClasses()/
+     * filterSelectClasses()/filterMultiSelectClasses(), depending on this
+     * filter's shape) for this filter instance only. Full-replace, same as
+     * every other cssClass() hook in the package — applies to the input/
+     * select element itself, not its wrapping div or label. For a range
+     * filter, both the "from" and "to" inputs get this same class.
+     */
+    public function cssClass(string $class): static
+    {
+        $this->cssClass = $class;
+
+        return $this;
+    }
+
+    public function getCssClass(): ?string
+    {
+        return $this->cssClass;
     }
 
     /**

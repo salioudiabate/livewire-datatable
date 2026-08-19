@@ -86,6 +86,14 @@ return [
         // your responsibility to keep if you touch these.
         'toolbar' => 'mb-5 flex flex-wrap items-start justify-between gap-3',
         'filters_panel' => 'mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4',
+        // Filter inputs — three shapes shared across all 8 filter types
+        // (see Concerns\HasStyling for which partial uses which), plus one
+        // label class common to all of them. Overridable per-filter via
+        // Filter::cssClass(), which takes precedence over these.
+        'filter_label' => 'text-xs font-medium text-slate-600',
+        'filter_input' => 'w-full min-w-0 rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
+        'filter_select' => 'w-full appearance-none bg-none rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
+        'filter_multiselect' => 'w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
         'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm',
         'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm text-slate-700',
         'empty_state' => 'px-4 py-10 text-center',
