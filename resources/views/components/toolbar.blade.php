@@ -57,16 +57,26 @@
         @endif
 
         @if ($this->showDensityToggle())
+            @php
+                $densityIconPaths = [
+                    'compact' => 'M4 9h16M4 12h16M4 15h16',
+                    'comfortable' => 'M4 6h16M4 12h16M4 18h16',
+                    'spacious' => 'M4 4h16M4 12h16M4 20h16',
+                ];
+            @endphp
             <div class="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white" role="group" aria-label="{{ __('livewire-datatable::livewire-datatable.density') }}">
                 @foreach ($this->densityOptions() as $option)
                     <button
                         type="button"
                         wire:click="setDensity('{{ $option }}')"
                         aria-pressed="{{ $this->density === $option ? 'true' : 'false' }}"
+                        aria-label="{{ __('livewire-datatable::livewire-datatable.density_'.$option) }}"
                         title="{{ __('livewire-datatable::livewire-datatable.density_'.$option) }}"
-                        class="px-2.5 py-2 text-sm font-medium transition-colors duration-150 {{ $this->density === $option ? 'bg-[var(--dt-primary,#4f46e5)] text-[var(--dt-primary-text,#ffffff)]' : 'text-slate-500 hover:bg-slate-50' }}"
+                        class="px-2.5 py-2 transition-colors duration-150 {{ $this->density === $option ? 'bg-[var(--dt-primary,#4f46e5)] text-[var(--dt-primary-text,#ffffff)]' : 'text-slate-500 hover:bg-slate-50' }}"
                     >
-                        {{ __('livewire-datatable::livewire-datatable.density_'.$option) }}
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-width="2" d="{{ $densityIconPaths[$option] ?? '' }}" />
+                        </svg>
                     </button>
                 @endforeach
             </div>
