@@ -11,16 +11,16 @@
         <div class="flex flex-wrap items-center gap-2">
             @foreach ($footerLeft as $item)
                 <div class="{{ $this->footerItemClasses() }}">
-                    <span class="text-xs font-medium text-slate-400">{{ $item['label'] }}</span>
-                    <span class="text-sm font-bold text-slate-700">{{ $item['value'] }}</span>
+                    <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{{ $item['label'] }}</span>
+                    <span class="text-sm font-bold text-[var(--dt-primary,#4f46e5)]">{{ $item['value'] }}</span>
                 </div>
             @endforeach
         </div>
         <div class="flex flex-wrap items-center gap-2">
             @foreach ($footerRight as $item)
                 <div class="{{ $this->footerItemClasses() }}">
-                    <span class="text-xs font-medium text-slate-400">{{ $item['label'] }}</span>
-                    <span class="text-sm font-bold text-slate-700">{{ $item['value'] }}</span>
+                    <span class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{{ $item['label'] }}</span>
+                    <span class="text-sm font-bold text-[var(--dt-primary,#4f46e5)]">{{ $item['value'] }}</span>
                 </div>
             @endforeach
         </div>
