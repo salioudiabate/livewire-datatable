@@ -210,6 +210,80 @@ it('renders the configured toolbar action dropdown panel classes', function () {
     })->assertSee('toolbar-action-dropdown-marker-xyz', false);
 });
 
+it('renders an icon set via ToolbarActionGroup::icon() on the dropdown trigger', function () {
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([ToolbarAction::make('Ping')->action('noop')])
+                    ->icon('<svg class="group-icon-marker-xyz"></svg>')
+                    ->dropdown('Menu'),
+            ];
+        }
+
+        public function noop(): void {}
+    })->assertSeeHtml('group-icon-marker-xyz');
+});
+
+it('keeps an icon set via icon() even when dropdown() is called afterward with no icon argument', function () {
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([ToolbarAction::make('Ping')->action('noop')])
+                    ->icon('<svg class="group-icon-order-marker-xyz"></svg>')
+                    ->dropdown('Menu'), // no icon arg here — must not wipe the one set above
+            ];
+        }
+
+        public function noop(): void {}
+    })->assertSeeHtml('group-icon-order-marker-xyz');
+});
+
+it('renders per-item icon and cssClass on a segmented group action, not just standalone ones', function () {
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([
+                    ToolbarAction::make('Prix')
+                        ->action('noop')
+                        ->icon('<svg class="item-icon-marker-xyz"></svg>')
+                        ->cssClass('item-class-marker-xyz'),
+                ]),
+            ];
+        }
+
+        public function noop(): void {}
+    })
+        ->assertSeeHtml('item-icon-marker-xyz')
+        ->assertSeeHtml('item-class-marker-xyz');
+});
+
+it('renders per-item icon and cssClass on a dropdown item, not just standalone ones', function () {
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([
+                    ToolbarAction::make('Prix')
+                        ->action('noop')
+                        ->icon('<svg class="dropdown-item-icon-marker-xyz"></svg>')
+                        ->cssClass('dropdown-item-class-marker-xyz'),
+                ])->dropdown('Trier par'),
+            ];
+        }
+
+        public function noop(): void {}
+    })
+        ->assertSeeHtml('dropdown-item-icon-marker-xyz')
+        ->assertSeeHtml('dropdown-item-class-marker-xyz');
+});
+
 it('runs a dropdown item action through runToolbarAction the same as any other action', function () {
     $test = Livewire::test(new class extends PostsTable
     {

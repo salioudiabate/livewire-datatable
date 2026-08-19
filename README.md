@@ -591,6 +591,8 @@ ToolbarActionGroup::make([
 ])->dropdown('Sort by...'),
 ```
 
+`->icon($svg)` on the group sets the icon shown on the dropdown *trigger* button itself (`dropdown($label, $icon)` is shorthand for calling both in one line — either order works, and calling `dropdown()` again without an icon argument doesn't clear one already set). `->icon()`/`->cssClass()` on each individual `ToolbarAction` inside the group style that one item, the same as a standalone action — this applies whether the group renders as a segmented control or a dropdown menu.
+
 Styling follows the same hooks as everything else: `->cssClass()` on the action (or group) overrides the default, which otherwise comes from `toolbarActionClasses()` / `toolbarActionGroupClasses()` / `toolbarActionDropdownClasses()` (see [Styling hooks](#styling-hooks)) — the dropdown's trigger button uses `toolbarActionClasses()` like any standalone action, only the open menu panel has its own hook.
 
 ## Theming

@@ -49,12 +49,30 @@ final class ToolbarActionGroup
 
     /**
      * Render as a single trigger button opening a dropdown menu of the
-     * group's actions, instead of a segmented control.
+     * group's actions, instead of a segmented control. $icon is a
+     * shorthand for also calling icon() — passing null here doesn't clear
+     * one already set via icon(), regardless of call order.
      */
     public function dropdown(string $label, ?string $icon = null): static
     {
         $this->dropdownLabel = $label;
-        $this->dropdownIcon = $icon;
+
+        if ($icon !== null) {
+            $this->dropdownIcon = $icon;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Raw inline SVG markup (or any HTML) for the dropdown() trigger
+     * button, rendered unescaped before the label — same convention as
+     * ToolbarAction::icon(). Only meaningful once dropdown() is also
+     * called; a segmented control has no single trigger to put it on.
+     */
+    public function icon(string $svg): static
+    {
+        $this->dropdownIcon = $svg;
 
         return $this;
     }
