@@ -95,8 +95,18 @@ return [
         // Custom toolbar buttons/groups declared via toolbarActions().
         // Overridable per-item via ToolbarAction::cssClass() /
         // ToolbarActionGroup::cssClass(), same precedence as bulk actions.
-        'toolbar_action' => 'flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
-        'toolbar_action_group' => 'flex h-9 items-center divide-x divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white',
+        // No h-9 here: this button carries its own border, so a fixed
+        // height would be the *total* box height (border-box), landing
+        // 2px shorter than Filters/Export/Columns — those resolve their
+        // height from py-2 + text-sm's line-height plus their border, so
+        // matching that exact recipe (not a fixed height) is what keeps
+        // them pixel-identical.
+        'toolbar_action' => 'flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
+        // h-9 lives on each segmented item instead (see toolbar-action.blade.php),
+        // not on this wrapper — same two-tier pattern as the density
+        // toggle: an auto-height wrapper lets its own border add on top
+        // of the items' fixed height, landing at the same 38px total.
+        'toolbar_action_group' => 'flex items-center divide-x divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white',
         // The open menu panel for ToolbarActionGroup::dropdown() — same
         // look as the built-in Columns dropdown panel.
         'toolbar_action_dropdown' => 'absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
