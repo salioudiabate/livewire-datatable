@@ -514,7 +514,17 @@ Exactly one trigger is expected per action:
 
 `->align('left' | 'right')` (default `right`) places the action alongside search/filters or alongside columns/export/density — group actions with `ToolbarActionGroup::make([...])` to render them as one segmented control (the same visual language as the built-in density toggle) instead of separate buttons; a group with no authorized actions left in it renders nothing at all.
 
-Styling follows the same hooks as everything else: `->cssClass()` on the action (or group) overrides the default, which otherwise comes from `toolbarActionClasses()` / `toolbarActionGroupClasses()` (see [Styling hooks](#styling-hooks)).
+Call `->dropdown('Label')` on a group to render it as a single trigger button opening a menu instead (the same pattern as the built-in Filters/Columns buttons) — useful once a group has more than two or three items, where a segmented control would get too wide:
+
+```php
+ToolbarActionGroup::make([
+    ToolbarAction::make('Sort by price')->action('sortByPrice'),
+    ToolbarAction::make('Sort by stock')->action('sortByStock'),
+    ToolbarAction::make('Sort by name')->action('sortByName'),
+])->dropdown('Sort by...'),
+```
+
+Styling follows the same hooks as everything else: `->cssClass()` on the action (or group) overrides the default, which otherwise comes from `toolbarActionClasses()` / `toolbarActionGroupClasses()` / `toolbarActionDropdownClasses()` (see [Styling hooks](#styling-hooks)) — the dropdown's trigger button uses `toolbarActionClasses()` like any standalone action, only the open menu panel has its own hook.
 
 ## Theming
 
@@ -569,7 +579,7 @@ protected function toolbarClasses(): string
 
 Whatever a hook returns becomes the *entire* class list for that element — there's no merging with a package default. That's deliberate: it's what makes every compartment genuinely restylable rather than only extendable, but it also means structural utilities the compartment needs to work (`overflow-x-auto`, `flex`, `overflow-hidden`, etc.) are your responsibility to keep if you touch one of these.
 
-Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`.
+Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`.
 
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
 

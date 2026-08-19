@@ -108,4 +108,14 @@ trait HasStyling
     {
         return (string) config('livewire-datatable.classes.toolbar_action_group', '');
     }
+
+    /**
+     * The open menu panel for a ToolbarActionGroup::dropdown() — the
+     * trigger button itself uses toolbarActionClasses()/cssClass() like
+     * any other standalone action.
+     */
+    public function toolbarActionDropdownClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.toolbar_action_dropdown', '');
+    }
 }

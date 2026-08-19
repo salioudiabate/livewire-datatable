@@ -42,7 +42,7 @@
             @if ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarActionGroup && $item->getAlign() === 'left')
                 @include('livewire-datatable::components.toolbar-action-group', ['group' => $item])
             @elseif ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarAction && $item->getAlign() === 'left' && $item->isAuthorized())
-                @include('livewire-datatable::components.toolbar-action', ['action' => $item, 'grouped' => false])
+                @include('livewire-datatable::components.toolbar-action', ['action' => $item, 'mode' => 'standalone'])
             @endif
         @endforeach
     </div>
@@ -111,7 +111,7 @@
             @if ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarActionGroup && $item->getAlign() === 'right')
                 @include('livewire-datatable::components.toolbar-action-group', ['group' => $item])
             @elseif ($item instanceof \Salioudiabate\LivewireDatatable\ToolbarAction && $item->getAlign() === 'right' && $item->isAuthorized())
-                @include('livewire-datatable::components.toolbar-action', ['action' => $item, 'grouped' => false])
+                @include('livewire-datatable::components.toolbar-action', ['action' => $item, 'mode' => 'standalone'])
             @endif
         @endforeach
     </div>

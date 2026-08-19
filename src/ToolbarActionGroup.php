@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Salioudiabate\LivewireDatatable;
 
 /**
- * Renders a set of ToolbarAction items as one segmented control (the same
- * visual language as the built-in density toggle) instead of separate
- * standalone buttons.
+ * Renders a set of ToolbarAction items either as one segmented control
+ * (the default — same visual language as the built-in density toggle) or,
+ * once dropdown() is called, as a single trigger button that opens a menu
+ * listing them (same pattern as the built-in Filters/Columns buttons).
  */
 final class ToolbarActionGroup
 {
     private string $align = 'right';
 
     private ?string $cssClass = null;
+
+    private ?string $dropdownLabel = null;
+
+    private ?string $dropdownIcon = null;
 
     /**
      * @param  array<int, ToolbarAction>  $actions
@@ -43,6 +48,18 @@ final class ToolbarActionGroup
     }
 
     /**
+     * Render as a single trigger button opening a dropdown menu of the
+     * group's actions, instead of a segmented control.
+     */
+    public function dropdown(string $label, ?string $icon = null): static
+    {
+        $this->dropdownLabel = $label;
+        $this->dropdownIcon = $icon;
+
+        return $this;
+    }
+
+    /**
      * @return array<int, ToolbarAction>
      */
     public function getActions(): array
@@ -58,5 +75,20 @@ final class ToolbarActionGroup
     public function getCssClass(): string
     {
         return $this->cssClass ?? '';
+    }
+
+    public function isDropdown(): bool
+    {
+        return $this->dropdownLabel !== null;
+    }
+
+    public function getDropdownLabel(): ?string
+    {
+        return $this->dropdownLabel;
+    }
+
+    public function getDropdownIcon(): ?string
+    {
+        return $this->dropdownIcon;
     }
 }

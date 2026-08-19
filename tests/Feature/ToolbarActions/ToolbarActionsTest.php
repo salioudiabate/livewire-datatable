@@ -156,3 +156,81 @@ it('renders the configured toolbar action group classes', function () {
         public function noop(): void {}
     })->assertSee('toolbar-action-group-marker-xyz', false);
 });
+
+it('renders a toolbar action group as a dropdown once dropdown() is called', function () {
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([
+                    ToolbarAction::make('Sort by price')->action('noop'),
+                    ToolbarAction::make('Sort by stock')->action('noop'),
+                ])->dropdown('Trier par'),
+            ];
+        }
+
+        public function noop(): void {}
+    })
+        ->assertSee('Trier par')
+        ->assertSee('Sort by price')
+        ->assertSee('Sort by stock')
+        ->assertSeeHtml('x-data="{ open: false }"');
+});
+
+it('drops an empty toolbar action dropdown when none of its actions are authorized', function () {
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([
+                    ToolbarAction::make('Hidden')->action('noop')->permission('never-granted'),
+                ])->dropdown('Trier par'),
+            ];
+        }
+
+        public function noop(): void {}
+    })->assertDontSee('Trier par')->assertDontSee('Hidden');
+});
+
+it('renders the configured toolbar action dropdown panel classes', function () {
+    config(['livewire-datatable.classes.toolbar_action_dropdown' => 'toolbar-action-dropdown-marker-xyz']);
+
+    Livewire::test(new class extends PostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([ToolbarAction::make('Ping')->action('noop')])->dropdown('Menu'),
+            ];
+        }
+
+        public function noop(): void {}
+    })->assertSee('toolbar-action-dropdown-marker-xyz', false);
+});
+
+it('runs a dropdown item action through runToolbarAction the same as any other action', function () {
+    $test = Livewire::test(new class extends PostsTable
+    {
+        public bool $wasCalled = false;
+
+        public function toolbarActions(): array
+        {
+            return [
+                ToolbarActionGroup::make([
+                    ToolbarAction::make('Ping')->action('ping'),
+                ])->dropdown('Menu'),
+            ];
+        }
+
+        public function ping(): void
+        {
+            $this->wasCalled = true;
+        }
+    });
+
+    $test->call('runToolbarAction', 'ping');
+
+    expect($test->get('wasCalled'))->toBeTrue();
+});

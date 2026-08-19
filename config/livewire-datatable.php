@@ -97,6 +97,9 @@ return [
         // ToolbarActionGroup::cssClass(), same precedence as bulk actions.
         'toolbar_action' => 'flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
         'toolbar_action_group' => 'flex h-9 items-center divide-x divide-slate-200 overflow-hidden rounded-lg border border-slate-200 bg-white',
+        // The open menu panel for ToolbarActionGroup::dropdown() — same
+        // look as the built-in Columns dropdown panel.
+        'toolbar_action_dropdown' => 'absolute right-0 z-10 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
 
         // Global only — Laravel renders the paginator's view (tailwind.blade.php
         // / simple-tailwind.blade.php) in its own context, outside the
