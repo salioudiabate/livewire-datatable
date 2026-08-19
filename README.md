@@ -47,6 +47,7 @@ class UsersTable extends DataTableComponent
 - [Columns](#columns)
 - [Filters](#filters)
 - [Sorting](#sorting)
+- [Search & pagination](#search--pagination)
 - [URL binding](#url-binding)
 - [Selection & bulk actions](#selection--bulk-actions)
 - [Bulk delete](#bulk-delete)
@@ -270,6 +271,31 @@ Column::make('Name', 'name')->sortable();
 
 Click the header to sort ascending, click again for descending, click a different sortable column to reset to ascending. The field is re-validated against `columns()` on every `sortBy()` call server-side.
 
+## Search & pagination
+
+Both are on by default and both hide their toolbar control the same way:
+
+```php
+public function showSearch(): bool   // default true
+{
+    return false;
+}
+
+public function showPerPage(): bool  // default true
+{
+    return false;
+}
+```
+
+The per-page dropdown's own choices (`[10, 25, 50, 100]` by default) are overridable too:
+
+```php
+public function perPageOptions(): array
+{
+    return [15, 30, 60];
+}
+```
+
 ## URL binding
 
 Search, filters, sort, and pagination state are bound to the query string by default, with a key prefix derived from the component's class name (`Str::kebab(class_basename(...))`) — so state survives a refresh and is shareable via URL.
@@ -303,7 +329,8 @@ use Salioudiabate\LivewireDatatable\BulkAction;
 public function bulkActions(): array
 {
     return [
-        BulkAction::make('exportSelected', 'Export selected')->icon('download'),
+        BulkAction::make('exportSelected', 'Export selected')
+            ->icon('<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M7 10l5 5 5-5M12 15V3" /></svg>'),
         BulkAction::make('archiveSelected', 'Archive')
             ->confirm('Archive the selected rows?')
             ->cssClass('text-amber-600')
@@ -317,6 +344,8 @@ public function archiveSelected(): void
     $this->clearSelection();
 }
 ```
+
+`icon()` (also on `RowAction` and `ToolbarAction`) takes raw inline SVG/HTML, not an icon name — there's no icon-name registry anywhere in the package, so you bring your own markup, the same as every built-in button.
 
 The header checkbox selects the current page only; once every row on the page is checked, a banner offers to expand the selection to every row matching the current search/filters across all pages (`selectAllFiltered()`) — without eagerly fetching every key on a single accidental click.
 
@@ -400,7 +429,7 @@ protected function persistDensity(): ?string
 }
 ```
 
-Padding per mode is configurable globally via `config('livewire-datatable.density')`, or per-table by overriding `densityThClasses()`/`densityTdClasses()`.
+Padding per mode is configurable globally via `config('livewire-datatable.density')`, or per-table by overriding `densityThClasses()`/`densityTdClasses()`. Want fewer than the three built-in modes (e.g. no "spacious")? Override `densityOptions(): array` to return a subset of `['compact', 'comfortable', 'spacious']`.
 
 ## Frozen columns
 
@@ -432,6 +461,15 @@ protected function exportFilename(): string
 }
 ```
 
+By default the export includes whatever columns are currently visible (respecting column visibility toggles) — override `exportColumns(): array` to export a different set entirely, e.g. including a column the user has hidden on screen:
+
+```php
+protected function exportColumns(): array
+{
+    return $this->columns(); // ignore visibility toggles, always export everything
+}
+```
+
 Want Excel instead of CSV? `Salioudiabate\LivewireDatatable\Export\ExcelExporter` ships with the package (built on [maatwebsite/excel](https://github.com/SpartnerNL/Laravel-Excel), an optional dependency — `composer require maatwebsite/excel` first). Return it from `exporter()`, and give the file an Excel-recognized extension in `exportFilename()`:
 
 ```php
@@ -452,6 +490,10 @@ protected function exportFilename(): string
 It reads the DataSource in the same chunked fashion as `CsvExporter` (never a single `get()`-everything call), and honors `Column::exportUsing()`/`exportValue()` identically. Note this bounds *read* memory only — the XLSX format itself isn't row-streamable, so PhpSpreadsheet still holds the workbook in memory while writing it. For very large exports, prefer CSV.
 
 Need a different format entirely? Implement `Exporter` yourself and return it from `exporter()` — its `export()` method returns a Symfony `Response`, so anything from a streamed CSV to a full file download works.
+
+The chunk size both built-in exporters read at a time is `config('livewire-datatable.export.chunk_size')` (default `1000`) — lower it if individual rows are unusually large.
+
+Need the export to hand back a real file response from your *own* route instead — server-side PDF generation, say — rather than a Livewire-driven download? See `submit()` under [Toolbar actions](#toolbar-actions).
 
 ## Row actions
 
@@ -605,6 +647,8 @@ Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `th
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
 
 One hook is global-only, with no per-table method: `config('livewire-datatable.classes.pagination_bar')`. Laravel renders the paginator's view (`tailwind.blade.php` / `simple-tailwind.blade.php`) in its own context outside the component's Blade scope, so it can't reach `$this` on your component — it applies to every table in the app.
+
+**If pagination renders unstyled (plain gray Laravel markup instead of the package's theme).** The package registers its own themed view as the app's default Tailwind pagination view via `Paginator::useTailwind()`, controlled by `config('livewire-datatable.register_pagination_view')` (default `true`). If your own `AppServiceProvider` (or anything else booted after the package) also calls `Paginator::useTailwind()` or `Paginator::defaultView(...)`, it silently wins — provider boot order means the *last* registration applies, not the package's. Remove the conflicting call, or set `register_pagination_view` to `false` and register the package's `tailwind.blade.php` yourself at the point in boot order you need.
 
 ## Translations
 

@@ -10,6 +10,45 @@ use Salioudiabate\LivewireDatatable\Tests\Fixtures\Components\DeletablePostsTabl
 use Salioudiabate\LivewireDatatable\Tests\Fixtures\Components\PostsTable;
 use Salioudiabate\LivewireDatatable\ToolbarAction;
 
+it('renders a bulk action icon on the wire:click-triggered button, not just submit()', function () {
+    DB::table('dt_test_posts')->insert([
+        'title' => 'Alpha', 'status' => 'published', 'views' => 10, 'created_at' => now(), 'updated_at' => now(),
+    ]);
+
+    Livewire::test(new class extends DeletablePostsTable
+    {
+        public function bulkActions(): array
+        {
+            return [
+                BulkAction::make('destroySelected', 'Delete')->icon('<svg class="icon-marker-xyz"></svg>'),
+            ];
+        }
+    })
+        ->set('selected', ['1'])
+        ->assertSeeHtml('icon-marker-xyz');
+});
+
+it('renders a row action icon on the url-linked and wire:click-triggered items, not just submit()', function () {
+    DB::table('dt_test_posts')->insert([
+        'title' => 'Alpha', 'status' => 'published', 'views' => 10, 'created_at' => now(), 'updated_at' => now(),
+    ]);
+
+    Livewire::test(new class extends PostsTable
+    {
+        public function rowActions(): array
+        {
+            return [
+                RowAction::make('View')->url(fn ($row) => "/posts/{$row->id}")->icon('<svg class="icon-marker-url"></svg>'),
+                RowAction::make('Archive')->action('archive')->icon('<svg class="icon-marker-action"></svg>'),
+            ];
+        }
+
+        public function archive(string $id): void {}
+    })
+        ->assertSeeHtml('icon-marker-url')
+        ->assertSeeHtml('icon-marker-action');
+});
+
 it('renders a submit-triggered toolbar action as a real form post', function () {
     Livewire::test(new class extends PostsTable
     {

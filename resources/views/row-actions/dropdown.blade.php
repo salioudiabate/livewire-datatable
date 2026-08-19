@@ -26,8 +26,11 @@
                         @if ($action->getTarget())
                             target="{{ $action->getTarget() }}"
                         @endif
-                        class="block px-3 py-1.5 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 {{ $action->getCssClass() }}"
+                        class="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 {{ $action->getCssClass() }}"
                     >
+                        @if ($action->getIcon())
+                            {!! $action->getIcon() !!}
+                        @endif
                         {{ $action->getLabel() }}
                     </a>
                 @elseif ($action->resolveSubmitUrl($row) !== null)
@@ -51,8 +54,11 @@
                         @else
                             wire:click="{{ $action->getMethod() }}('{{ $this->resolveRowKey($row) }}')"
                         @endif
-                        class="block w-full px-3 py-1.5 text-left text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 {{ $action->getCssClass() }}"
+                        class="flex w-full items-center gap-1.5 px-3 py-1.5 text-left text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 {{ $action->getCssClass() }}"
                     >
+                        @if ($action->getIcon())
+                            {!! $action->getIcon() !!}
+                        @endif
                         {{ $action->getLabel() }}
                     </button>
                 @endif
