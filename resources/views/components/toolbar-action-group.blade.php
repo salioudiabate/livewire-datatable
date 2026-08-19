@@ -17,6 +17,15 @@
                     {!! $group->getDropdownIcon() !!}
                 @endif
                 {{ $group->getDropdownLabel() }}
+                <svg
+                    class="h-3.5 w-3.5 text-slate-400 transition-transform duration-150"
+                    x-bind:class="{ 'rotate-180': open }"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
             </button>
 
             <div
