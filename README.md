@@ -671,6 +671,8 @@ public function deleteUser(string $id): void
 
 Need a per-row action that hands back a real HTTP response instead of an AJAX diff (a per-row generated PDF, say)? `RowAction::submit()` works the same way as `ToolbarAction::submit()` — see [Toolbar actions](#toolbar-actions).
 
+`->action($method)` is dispatched through `runRowAction($method, $key)`, which re-resolves the actual row from the current page and re-checks `visible()` against it before invoking the method — the same defensive pattern as `runToolbarAction()`/`runBulkAction()`. `visible()` isn't just a rendering filter: a "Delete" button hidden for a given row via `visible()` genuinely can't be triggered for that row either, even by a client calling the underlying method directly.
+
 ## Clickable rows
 
 The whole "click anywhere on the row to open it" pattern, independent of `RowAction` — off by default:

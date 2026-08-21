@@ -26,6 +26,37 @@ it('runs the row action method with the resolved row key', function () {
     expect(Post::query()->find(1)->status)->toBe('archived');
 });
 
+it('runRowAction() dispatches the target method once the action is declared, resolvable and visible() for that row', function () {
+    Livewire::test(FullFeaturedPostsTable::class)->call('runRowAction', 'archivePost', '1');
+
+    expect(Post::query()->find(1)->status)->toBe('archived');
+});
+
+it('runRowAction() re-checks visible() against the real row server-side instead of trusting the client', function () {
+    // Post 2 is already 'archived', so visible() returns false for it —
+    // a client calling runRowAction() directly (bypassing the fact that
+    // the Archive button isn't even rendered for this row) must still be
+    // rejected, the same way runToolbarAction()/runBulkAction() re-check
+    // isAuthorized() rather than trusting what the UI happened to render.
+    Livewire::test(FullFeaturedPostsTable::class)
+        ->call('runRowAction', 'archivePost', '2')
+        ->assertStatus(403);
+
+    expect(Post::query()->find(2)->status)->toBe('archived'); // unchanged (was already archived, update() never ran)
+});
+
+it('runRowAction() rejects a method that was never declared as a row action', function () {
+    Livewire::test(FullFeaturedPostsTable::class)
+        ->call('runRowAction', 'someUndeclaredMethod', '1')
+        ->assertStatus(403);
+});
+
+it('runRowAction() rejects a key that does not resolve to any row on the current page', function () {
+    Livewire::test(FullFeaturedPostsTable::class)
+        ->call('runRowAction', 'archivePost', '999')
+        ->assertStatus(403);
+});
+
 it('filters row actions per-row via visible()', function () {
     $component = new FullFeaturedPostsTable;
 
