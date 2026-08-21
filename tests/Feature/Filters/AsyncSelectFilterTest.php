@@ -104,6 +104,26 @@ it('offers a clear option only once a value is selected', function () {
         ->and($withValue)->toContain('Clear selection');
 });
 
+it('safely embeds an option value containing a single quote in wire:click instead of breaking out of it', function () {
+    // optionsUsing() is developer-supplied and may key its options by
+    // free-text values (a category name, not always a safe int/UUID id) —
+    // raw string interpolation into wire:click would let a value like
+    // this one break out of the Livewire action-call syntax entirely.
+    $html = Livewire::test(new class extends PostsTable
+    {
+        public function filters(): array
+        {
+            return [
+                AsyncSelectFilter::make('Status', 'status')
+                    ->optionsUsing(fn (string $term) => ["o'brien" => "O'Brien"]),
+            ];
+        }
+    })->html();
+
+    expect($html)->toContain('\u0027')
+        ->and($html)->not->toContain("'o'brien'");
+});
+
 it('clears both filterValues and filterSearchTerms on resetFilters()', function () {
     $test = Livewire::test(new class extends PostsTable
     {

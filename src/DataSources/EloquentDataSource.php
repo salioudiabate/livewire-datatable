@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use InvalidArgumentException;
 use Salioudiabate\LivewireDatatable\DataSources\Concerns\EscapesLikeTerms;
 
 final class EloquentDataSource implements DataSource, Deletable
@@ -101,8 +102,15 @@ final class EloquentDataSource implements DataSource, Deletable
         return (clone $this->query)->get()->map($keyResolver)->all();
     }
 
+    /**
+     * @param  non-empty-string  $function
+     */
     public function aggregate(string $function, string $column): mixed
     {
+        if (! in_array($function, ['sum', 'avg', 'min', 'max', 'count'], true)) {
+            throw new InvalidArgumentException("Unsupported aggregate function [{$function}].");
+        }
+
         return (clone $this->query)->{$function}($column);
     }
 

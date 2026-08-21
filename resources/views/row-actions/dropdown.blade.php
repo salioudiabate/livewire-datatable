@@ -50,9 +50,9 @@
                     <button
                         type="button"
                         @if ($action->needsConfirmation())
-                            x-on:click="open = false; confirm('{{ $action->getConfirmMessage() }}') && $wire.{{ $action->getMethod() }}('{{ $this->resolveRowKey($row) }}')"
+                            x-on:click="open = false; confirm(@js($action->getConfirmMessage())) && $wire.{{ $action->getMethod() }}(@js($this->resolveRowKey($row)))"
                         @else
-                            wire:click="{{ $action->getMethod() }}('{{ $this->resolveRowKey($row) }}')"
+                            wire:click="{{ $action->getMethod() }}(@js($this->resolveRowKey($row)))"
                         @endif
                         class="flex w-full items-center gap-1.5 px-3 py-1.5 text-left text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 {{ $action->getCssClass() }}"
                     >

@@ -21,7 +21,7 @@
                     <button
                         type="button"
                         @if ($action->needsConfirmation())
-                            x-on:click="confirm('{{ $action->getConfirmMessage() }}') && $wire.runBulkAction('{{ $action->getMethod() }}')"
+                            x-on:click="confirm(@js($action->getConfirmMessage())) && $wire.runBulkAction('{{ $action->getMethod() }}')"
                         @else
                             wire:click="runBulkAction('{{ $action->getMethod() }}')"
                         @endif

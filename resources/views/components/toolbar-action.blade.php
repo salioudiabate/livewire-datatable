@@ -52,7 +52,7 @@
     <button
         type="button"
         @if ($action->needsConfirmation())
-            x-on:click="{{ $toolbarActionMode === 'dropdown-item' ? 'open = false; ' : '' }}confirm('{{ $action->getConfirmMessage() }}') && $wire.runToolbarAction('{{ $action->getMethod() }}')"
+            x-on:click="{{ $toolbarActionMode === 'dropdown-item' ? 'open = false; ' : '' }}confirm(@js($action->getConfirmMessage())) && $wire.runToolbarAction('{{ $action->getMethod() }}')"
         @elseif ($toolbarActionMode === 'dropdown-item')
             x-on:click="open = false"
             wire:click="runToolbarAction('{{ $action->getMethod() }}')"

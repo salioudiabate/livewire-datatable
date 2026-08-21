@@ -7,6 +7,7 @@ namespace Salioudiabate\LivewireDatatable\DataSources;
 use Closure;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
+use InvalidArgumentException;
 use RuntimeException;
 use Salioudiabate\LivewireDatatable\DataSources\Concerns\EscapesLikeTerms;
 
@@ -90,8 +91,15 @@ final class QueryBuilderDataSource implements DataSource, Deletable
         return (clone $this->query)->get()->map($keyResolver)->all();
     }
 
+    /**
+     * @param  non-empty-string  $function
+     */
     public function aggregate(string $function, string $column): mixed
     {
+        if (! in_array($function, ['sum', 'avg', 'min', 'max', 'count'], true)) {
+            throw new InvalidArgumentException("Unsupported aggregate function [{$function}].");
+        }
+
         return (clone $this->query)->{$function}($column);
     }
 

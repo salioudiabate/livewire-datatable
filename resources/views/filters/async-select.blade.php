@@ -56,7 +56,7 @@
                     <li wire:key="async-filter-{{ $filter->key() }}-{{ $optionValue }}">
                         <button
                             type="button"
-                            wire:click="$set('filterValues.{{ $filter->key() }}', '{{ $optionValue }}')"
+                            wire:click="$set('filterValues.{{ $filter->key() }}', @js($optionValue))"
                             x-on:click="open = false"
                             class="block w-full px-3 py-1.5 text-left text-sm text-slate-700 hover:bg-slate-50 {{ (string) $value === (string) $optionValue ? 'bg-[var(--dt-primary-light,#eef2ff)] font-medium' : '' }}"
                         >

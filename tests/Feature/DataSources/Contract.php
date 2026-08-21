@@ -127,6 +127,15 @@ function runDataSourceContractTests(Closure $makeDataSource): void
             ->and($makeDataSource()->aggregate('count', 'views'))->toBe(5);
     });
 
+    it('rejects an aggregate function outside sum/avg/min/max/count instead of dynamically dispatching it', function () use ($makeDataSource) {
+        // aggregate()'s $function ends up as a dynamic method call on the
+        // underlying query/collection object ($query->{$function}(...)).
+        // Every adapter must reject anything outside the known set before
+        // that happens — a real query engine has far more callable methods
+        // than just aggregate functions (delete(), truncate(), update()...).
+        $makeDataSource()->aggregate('delete', 'views');
+    })->throws(InvalidArgumentException::class);
+
     it('exposes the underlying raw object', function () use ($makeDataSource) {
         expect($makeDataSource()->raw())->not->toBeNull();
     });
