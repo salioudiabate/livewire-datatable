@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/salioudiabate/livewire-datatable/actions/workflows/tests.yml/badge.svg)](https://github.com/salioudiabate/livewire-datatable/actions/workflows/tests.yml)
 [![Latest Version](https://img.shields.io/packagist/v/salioudiabate/livewire-datatable.svg)](https://packagist.org/packages/salioudiabate/livewire-datatable)
+[![Total Downloads](https://img.shields.io/packagist/dt/salioudiabate/livewire-datatable.svg)](https://packagist.org/packages/salioudiabate/livewire-datatable)
 [![License](https://img.shields.io/packagist/l/salioudiabate/livewire-datatable.svg)](LICENSE.md)
 
 A professional, multi-datasource Livewire DataTable for Laravel. Search, sortable columns, a real filter system, per-instance URL binding, bulk selection and delete, column visibility, CSV export and row actions — all built on a `DataSource` abstraction so the same table works against **Eloquent, the Query Builder, raw SQL, or a plain PHP array/Collection**, not just Eloquent.
