@@ -82,3 +82,23 @@ it('clears the selection when the search term changes', function () {
         ->set('search', 'Post 1')
         ->assertSet('selected', []);
 });
+
+it('exposes visibleRowKeys() publicly, scoped to the current page only', function () {
+    $component = new DeletablePostsTable;
+
+    expect($component->visibleRowKeys())->toHaveCount(10);
+});
+
+it('exposes allFilteredKeys() publicly, scoped to every matching row across all pages', function () {
+    $component = new DeletablePostsTable;
+
+    expect($component->allFilteredKeys())->toHaveCount(15);
+});
+
+it('narrows allFilteredKeys() to whatever search/filters are currently active, same as selectAllFiltered()', function () {
+    $component = new DeletablePostsTable;
+    $component->search = 'Post 1';
+
+    // "Post 1", "Post 10".."Post 15" all match the substring "Post 1".
+    expect($component->allFilteredKeys())->toHaveCount(7);
+});

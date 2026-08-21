@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Salioudiabate\LivewireDatatable\Concerns;
 
+use Illuminate\Support\Collection;
 use Salioudiabate\LivewireDatatable\DataSources\DataSource;
 use Salioudiabate\LivewireDatatable\DataSources\DataSourceFactory;
 
@@ -45,5 +46,39 @@ trait ResolvesDataSource
         $source = $this->applyFiltersTo($source);
 
         return $this->applySortTo($source);
+    }
+
+    /**
+     * Every row matching the current search/filters/sort — not just the
+     * current page's slice — for building a custom action of your own
+     * (toolbarActions()/bulkActions()/rowActions() methods) without
+     * reimplementing DataSource pagination by hand. Fetched in bounded
+     * chunks rather than one single unbounded query, the same technique
+     * Export\CsvExporter uses internally, but still materializes the full
+     * result into one Collection at the end — fine for a custom action
+     * over a realistically-sized filtered result, not a substitute for
+     * Export\Exporter's genuinely streaming response when the goal is
+     * exporting a very large table.
+     *
+     * @return Collection<int, mixed>
+     */
+    public function allFilteredRows(int $chunkSize = 1000): Collection
+    {
+        $source = $this->filteredDataSource();
+        $rows = collect();
+        $page = 1;
+
+        while (true) {
+            $result = $source->paginate($chunkSize, $page);
+            $rows = $rows->concat($result->items);
+
+            if ($result->items->isEmpty() || $page >= $result->lastPage()) {
+                break;
+            }
+
+            $page++;
+        }
+
+        return $rows;
     }
 }

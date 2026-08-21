@@ -79,7 +79,7 @@ trait HasSelection
 
     public function isCurrentPageFullySelected(): bool
     {
-        $pageKeys = $this->currentPageKeys();
+        $pageKeys = $this->visibleRowKeys();
 
         return $pageKeys !== [] && array_diff($pageKeys, $this->selected) === [];
     }
@@ -98,7 +98,7 @@ trait HasSelection
 
     public function updatedSelectAll(bool $value): void
     {
-        $this->selected = $value ? $this->currentPageKeys() : [];
+        $this->selected = $value ? $this->visibleRowKeys() : [];
     }
 
     public function selectAllFiltered(): void
@@ -114,17 +114,29 @@ trait HasSelection
     }
 
     /**
+     * The resolved key of every row on the current page — for a custom
+     * action of your own (toolbarActions()/bulkActions()/rowActions()
+     * methods) that needs to act on exactly what's on screen, the same
+     * scope rows() itself uses.
+     *
      * @return array<int, string>
      */
-    protected function currentPageKeys(): array
+    public function visibleRowKeys(): array
     {
         return $this->resolveKeysOf(collect($this->rows()->items()));
     }
 
     /**
+     * The resolved key of every row matching the current search/filters —
+     * not just the current page — the same building block
+     * selectAllFiltered() uses internally, exposed for a custom action of
+     * your own that needs every matching key rather than just a page's
+     * worth. See ResolvesDataSource::allFilteredRows() for the full row
+     * data instead of just keys.
+     *
      * @return array<int, string>
      */
-    protected function allFilteredKeys(): array
+    public function allFilteredKeys(): array
     {
         $keys = $this->filteredDataSource()->pluckKeys($this->recordKey());
 

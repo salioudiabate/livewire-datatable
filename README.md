@@ -446,6 +446,35 @@ public function recordKey(): string
 }
 ```
 
+### Accessing row and filter data for your own custom actions
+
+Everything a `toolbarActions()`/`bulkActions()`/`rowActions()` method needs to build a custom action of its own — beyond `getSelected()` above — is already public:
+
+| Method / property | Scope | Returns |
+|---|---|---|
+| `rows()` | current page | the `LengthAwarePaginator` the table itself renders — `->items()` for the row data |
+| `visibleRowKeys()` | current page | resolved keys only, same scope as `rows()` |
+| `allFilteredKeys()` | every matching row, all pages | resolved keys only — the same building block `selectAllFiltered()` uses internally |
+| `allFilteredRows(int $chunkSize = 1000)` | every matching row, all pages | full row data, as a `Collection` — fetched in bounded chunks (same technique `Export\CsvExporter` uses), but still materializes the whole result at the end. Fine for a custom action over a realistically-sized filtered result; for exporting a genuinely large table, use `Export\Exporter` instead, which streams rather than materializing |
+| `$this->filterValues` | — | the raw current state of every filter, keyed by `Filter::key()`/`RangeFilter`'s derived `_from`/`_to` keys |
+| `$this->filters()` | — | the `Filter` objects themselves — `->label()`, `->key()`, `->isActive($this->filterValues)` |
+
+```php
+public function bulkActions(): array
+{
+    return [
+        BulkAction::make('emailAllFiltered', 'Email everyone matching this search'),
+    ];
+}
+
+public function emailAllFiltered(): void
+{
+    foreach ($this->allFilteredRows() as $user) {
+        Mail::to($user)->queue(new WeeklyDigest);
+    }
+}
+```
+
 ## Bulk delete
 
 A generic, permission-gated bulk delete is built in — opt in by overriding `deletePermission()`:
