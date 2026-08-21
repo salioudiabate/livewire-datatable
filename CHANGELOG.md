@@ -5,6 +5,38 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-08-21
+
+### Added
+
+- `ToolbarActionGroup::dropdown()` — a segmented group can now render as a dropdown menu instead of a segmented pill bar, with a chevron indicator and its own `ToolbarActionGroup::icon()`.
+- `ToolbarAction`/`RowAction`/`BulkAction::submit()` — a real, non-AJAX HTML form POST for server work that must return a full HTTP response (a generated PDF opened in a new tab, a file download), with automatic CSRF/`_method` spoofing, `confirm()` support, and a loading-state spinner.
+- `stickyHeader()` / `stickyHeaderMaxHeight()` — keeps the header row visible while a tall table scrolls internally.
+- `Export\PdfExporter` (`barryvdh/laravel-dompdf`, optional) — a print-friendly PDF alternative to CSV/Excel.
+- `emptyStateView()` — replace the built-in "No results" message with a custom Blade partial.
+- `pollInterval()` — `wire:poll`-based auto-refresh.
+- `rowUrl()` — click-anywhere-on-the-row navigation, skipping interactive elements.
+- `footer()` — free-form label/value summary blocks below the table, computed against the full filtered result via `DataSource::aggregate()`.
+- `AsyncSelectFilter` — a `SelectFilter` whose options are resolved on demand from a search term (`optionsUsing()`/`labelUsing()`) instead of a fixed array, for option sets too large to load eagerly.
+- Filter input styling: `filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()`, plus a per-filter `Filter::cssClass()` override — every filter input's classes were previously hardcoded per Blade partial.
+- Documented and permanently tested the dependent/cascading filters pattern (country → town): no new API, `filters()` already re-reads `$this->filterValues` on every render and Livewire's own `updatedFilterValuesX()` nested hook clears a stale child value.
+- `visibleRowKeys()`, `allFilteredKeys()` (now public), `allFilteredRows(int $chunkSize = 1000)` — public access to the current page's or every filtered row's keys/data, for building a custom `toolbarActions()`/`bulkActions()`/`rowActions()` method without reimplementing `DataSource` pagination by hand.
+- A soft, flat, `wire:offline`-based connection-lost banner, on by default (`showOfflineIndicator()`, `offlineBannerClasses()`).
+- `filtersLabel()`, `exportLabel()`, `searchPlaceholder()` — previously fixed toolbar strings, now overridable per table.
+
+### Fixed
+
+- **Sticky header never actually worked.** The original `stickyHeaderOffset()` design assumed `position: sticky` relative to the page, but `table_wrapper`'s existing `overflow-x-auto` forces the computed `overflow-y` to `auto` too per the CSS Overflow spec, silently making the wrapper its own scroll container — a page-relative sticky offset never engaged. Redesigned around `stickyHeaderMaxHeight()`: a bounded-height wrapper that scrolls internally on both axes, with the header pinned to that scrollport's own top.
+- The toolbar and Columns dropdown panels shared the sticky header's exact `z-index: 10` — ties go to later DOM order, so an open dropdown menu painted *under* the sticky header instead of over it. Both bumped to `z-20`.
+- `RowAction`/`BulkAction::icon()` was stored but never rendered outside a `submit()` form — the regular `wire:click`/`url()` branches silently dropped it.
+- Custom toolbar buttons and the density toggle rendered 2px shorter than the built-in Filters/Export/Columns buttons (a fixed `h-9` computes as the *total* border-box height on an element that also carries its own border, landing short of the `py-2`-based recipe the other buttons use).
+
+### Security
+
+- `AsyncSelectFilter` option buttons and `RowAction`'s `confirm()`/`action()` triggers built `wire:click` attributes via raw Blade interpolation instead of `@js()`. Blade's `{{ }}` only escapes for the HTML-attribute context; the browser decodes those entities back before Livewire's own action-call parser ever sees the value, so a developer-supplied option key or a `recordKey()` resolving to free text (a name, a slug) could break out of the intended single argument. Fixed everywhere in the package via `@js()`, which is immune regardless of quoting style.
+- `EloquentDataSource`/`QueryBuilderDataSource::aggregate()` now validate `$function` against `sum`/`avg`/`min`/`max`/`count` before the dynamic `$query->{$function}(...)` dispatch, matching `CollectionDataSource`'s existing guard — closes an arbitrary-method-call gadget on the underlying query builder that was unreachable by user input today, but had no defense if that ever changed.
+- `RowAction::visible()` was previously enforced at render time only — the underlying method stayed directly callable via Livewire regardless. Added `runRowAction()`, symmetric with the existing `runToolbarAction()`/`runBulkAction()`, which re-resolves the real row from the current page and re-checks `visible()` before invoking the method.
+
 ## [1.2.0] - 2026-08-18
 
 ### Added
