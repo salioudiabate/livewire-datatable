@@ -49,6 +49,7 @@ class UsersTable extends DataTableComponent
 - [Sorting](#sorting)
 - [Search & pagination](#search--pagination)
 - [Auto-refresh](#auto-refresh)
+- [Connection status](#connection-status)
 - [URL binding](#url-binding)
 - [Selection & bulk actions](#selection--bulk-actions)
 - [Bulk delete](#bulk-delete)
@@ -379,6 +380,19 @@ public function pollInterval(): ?int
 ```
 
 Wires Livewire's own `wire:poll` onto the table rather than reinventing polling, so all of Livewire's usual polling behavior applies (it pauses in a background browser tab, for instance).
+
+## Connection status
+
+A soft, flat amber banner appears automatically when the browser goes offline, and disappears once back online — on by default:
+
+```php
+public function showOfflineIndicator(): bool
+{
+    return false; // opt out per-table
+}
+```
+
+Pure Livewire under the hood — `wire:offline` is hidden via a `display: none` CSS rule Livewire itself injects globally, then shown/hidden by listening to the native browser `offline`/`online` events. No custom JS, no polling to detect it. Style it like any other compartment via `offlineBannerClasses()` (see [Styling hooks](#styling-hooks)).
 
 ## URL binding
 
@@ -838,7 +852,7 @@ protected function toolbarClasses(): string
 
 Whatever a hook returns becomes the *entire* class list for that element — there's no merging with a package default. That's deliberate: it's what makes every compartment genuinely restylable rather than only extendable, but it also means structural utilities the compartment needs to work (`overflow-x-auto`, `flex`, `overflow-hidden`, etc.) are your responsibility to keep if you touch one of these.
 
-Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`, `footerWrapperClasses()`, `footerItemClasses()`, `filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()` (see [Filters](#filters) for the per-filter `cssClass()` override).
+Available hooks: `rootClasses()`, `tableWrapperClasses()`, `tableClasses()`, `theadTrClasses()`, `thClasses()`, `tbodyTrClasses()`, `tdClasses()`, `paginationWrapperClasses()`, `toolbarClasses()`, `filtersPanelClasses()`, `bulkActionsBarClasses()`, `selectionBannerClasses()`, `emptyStateClasses()`, `columnsDropdownClasses()`, `errorStateClasses()`, `toolbarActionClasses()`, `toolbarActionGroupClasses()`, `toolbarActionDropdownClasses()`, `footerWrapperClasses()`, `footerItemClasses()`, `filterLabelClasses()`, `filterInputClasses()`, `filterSelectClasses()`, `filterMultiSelectClasses()` (see [Filters](#filters) for the per-filter `cssClass()` override), `offlineBannerClasses()`.
 
 For a single column rather than the whole table, use `Column::thClass()` / `Column::tdClass()` instead (see [Columns](#columns)).
 

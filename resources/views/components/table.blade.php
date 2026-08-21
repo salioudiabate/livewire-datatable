@@ -6,6 +6,7 @@
     @endif
 >
     @include('livewire-datatable::components.theme-style')
+    @include('livewire-datatable::components.offline-banner')
 
     @include('livewire-datatable::components.toolbar', ['filters' => $filters])
 

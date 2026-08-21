@@ -84,6 +84,11 @@ return [
         // list for that compartment — structural utilities (flex,
         // overflow-hidden, etc.) that make it render/behave correctly are
         // your responsibility to keep if you touch these.
+        // wire:offline connection-lost banner (Concerns\HasOfflineIndicator).
+        // Flat by design — no border, no shadow — soft amber background
+        // instead, matching the "soft, modern" tone of the rest of the
+        // package's non-destructive notices.
+        'offline_banner' => 'mb-4 flex items-center gap-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800',
         'toolbar' => 'mb-5 flex flex-wrap items-start justify-between gap-3',
         'filters_panel' => 'mb-4 rounded-xl border border-slate-200 bg-slate-50 p-4',
         // Filter inputs — three shapes shared across all 8 filter types

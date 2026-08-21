@@ -36,4 +36,6 @@ return [
     'page_of' => 'Page :current sur :last',
     'select_option' => 'Sélectionner une option...',
     'no_options' => 'Aucune option ne correspond',
+    'offline' => 'Connexion internet perdue',
+    'offline_hint' => 'Les actions reprendront à la reconnexion.',
 ];

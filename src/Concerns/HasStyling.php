@@ -150,6 +150,14 @@ trait HasStyling
     }
 
     /**
+     * The wire:offline connection-lost banner — see Concerns\HasOfflineIndicator.
+     */
+    public function offlineBannerClasses(): string
+    {
+        return (string) config('livewire-datatable.classes.offline_banner', '');
+    }
+
+    /**
      * The <label> above a filter's input(s) — shared by every filter type.
      */
     public function filterLabelClasses(): string
