@@ -105,3 +105,13 @@ it('safely embeds a row key containing a single quote in wire:click instead of b
     expect($html)->toContain('\u0027')
         ->and($html)->not->toContain("archivePost('o'brien's post')");
 });
+
+it('teleports the row actions menu to <body> with fixed positioning so the table overflow never clips it', function () {
+    $html = Livewire::test(FullFeaturedPostsTable::class)->html();
+
+    expect($html)
+        ->toContain('<template x-teleport="body">')
+        ->toContain('x-ref="trigger"')
+        ->toMatch('/x-ref="panel"[\s\S]*?class="fixed z-50/')
+        ->not->toContain('class="absolute right-0 z-10');
+});

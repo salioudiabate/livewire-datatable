@@ -5,6 +5,12 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-09-27
+
+### Fixed
+
+- The row actions menu is teleported to `<body>` and positioned `fixed` from its trigger (opening upwards when there is no room below), so the table wrapper's horizontal overflow no longer clips it or makes it scroll.
+
 ## [1.3.0] - 2026-08-21
 
 ### Added

@@ -1,8 +1,48 @@
 @if (count($actions) > 0)
-    <div x-data="{ open: false }" class="relative inline-block text-left">
+    {{--
+        The menu is teleported to <body> and positioned `fixed` from the trigger's bounding box:
+        rendered in place, it would be clipped by the table wrapper's overflow-x-auto (and make it
+        scroll) as soon as it extends past the table. Livewire resolves wire:click inside teleported
+        content back to this component, so the actions keep working unchanged.
+    --}}
+    <div
+        x-data="{
+            open: false,
+            style: '',
+            toggle() {
+                this.open ? this.close() : this.show();
+            },
+            show() {
+                this.open = true;
+                this.$nextTick(() => this.place());
+            },
+            close() {
+                this.open = false;
+            },
+            place() {
+                const trigger = this.$refs.trigger.getBoundingClientRect();
+                const panel = this.$refs.panel;
+                const gap = 4;
+                const margin = 8;
+                const height = panel.offsetHeight;
+                const width = panel.offsetWidth;
+                const fitsBelow = trigger.bottom + gap + height <= window.innerHeight - margin;
+                const top = fitsBelow ? trigger.bottom + gap : Math.max(margin, trigger.top - gap - height);
+                const left = Math.min(Math.max(margin, trigger.right - width), window.innerWidth - width - margin);
+                this.style = `top: ${top}px; left: ${left}px;`;
+            },
+        }"
+        x-on:keydown.escape.window="close()"
+        x-on:resize.window="close()"
+        x-on:scroll.window.capture="close()"
+        class="relative inline-block text-left"
+    >
         <button
             type="button"
-            x-on:click="open = ! open"
+            x-ref="trigger"
+            x-on:click="toggle()"
+            x-bind:aria-expanded="open"
+            aria-haspopup="menu"
             class="rounded-lg p-1.5 text-slate-400 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]"
         >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -10,14 +50,19 @@
             </svg>
         </button>
 
+        <template x-teleport="body">
         <div
+            x-ref="panel"
             x-show="open"
             x-cloak
-            x-on:click.outside="open = false"
+            x-bind:style="style"
+            x-on:click.outside="if (! $refs.trigger.contains($event.target)) close()"
+            x-on:click="close()"
             x-transition:enter="transition ease-out duration-100"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100"
-            class="absolute right-0 z-10 mt-1 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
+            role="menu"
+            class="fixed z-50 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
         >
             @foreach ($actions as $action)
                 @if ($action->resolveUrl($row) !== null)
@@ -64,5 +109,6 @@
                 @endif
             @endforeach
         </div>
+        </template>
     </div>
 @endif
