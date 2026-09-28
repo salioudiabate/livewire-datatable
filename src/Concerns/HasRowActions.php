@@ -72,6 +72,33 @@ trait HasRowActions
         $this->{$method}($key);
     }
 
+    /**
+     * Column::toggle() switches dispatch through here, with the column field rather than the
+     * method name: the method comes from the column definition, never from the client, and
+     * the row is re-resolved from the current page so toggle()'s $enabled is checked against
+     * real data — the same guarantees as runRowAction().
+     */
+    public function runColumnToggle(string $field, mixed $key): void
+    {
+        $column = null;
+
+        foreach ($this->columns() as $candidate) {
+            if ($candidate->isToggle() && $candidate->getField() === $field) {
+                $column = $candidate;
+
+                break;
+            }
+        }
+
+        $row = $column !== null ? $this->findRowOnCurrentPage($key) : null;
+
+        if ($column === null || $row === null || ! $column->isToggleEnabled($row)) {
+            abort(403);
+        }
+
+        $this->{$column->getToggleAction()}($key);
+    }
+
     private function findRowOnCurrentPage(mixed $key): mixed
     {
         $keyString = (string) $key;

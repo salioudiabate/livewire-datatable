@@ -5,6 +5,17 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-28
+
+### Added
+
+- `Column::badges($visible, $label, $variant)`: a list shown as its first badges plus a "+N" badge whose popover (hover, or pinned on click) lists the rest. Teleported to `<body>`, so the table overflow never clips it. Exports every label.
+- `Column::badge($variant)`: the value as one badge, with a fixed variant or one chosen per row; `Support\Badge::html()` for badges inside composed `format()` cells.
+- `Column::toggle($action, $enabled, $label)`: a boolean as a switch. Clicks go through `runColumnToggle()`, which re-checks the column and the row (`$enabled`) server-side, like `runRowAction()`.
+- `ToolbarAction::primary()`: the toolbar's main call to action, filled with the theme color.
+- `config('livewire-datatable.density_toggle')` to hide the density switch globally, and `config('livewire-datatable.refresh_event')` to re-render every table on one Livewire event.
+- Style hooks: `classes.badge_variants`, `badge_more`, `badge_popover`, `toggle`, `toggle_on`, `toggle_knob`, `toolbar_action_primary`.
+
 ## [1.4.0] - 2026-09-28
 
 ### Added

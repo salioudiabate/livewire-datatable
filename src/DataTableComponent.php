@@ -87,6 +87,19 @@ abstract class DataTableComponent extends Component
         $this->clearSelected();
     }
 
+    /**
+     * Re-renders on config('livewire-datatable.refresh_event') when set, so a modal can refresh
+     * every table after a save without each table declaring its own listener.
+     *
+     * @return array<string, string>
+     */
+    protected function getListeners(): array
+    {
+        $event = config('livewire-datatable.refresh_event');
+
+        return is_string($event) && $event !== '' ? [$event => '$refresh'] : [];
+    }
+
     public function render(): View
     {
         return $this->renderTable();

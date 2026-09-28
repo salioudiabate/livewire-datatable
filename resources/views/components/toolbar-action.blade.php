@@ -3,7 +3,9 @@
     $toolbarActionDefaultClass = match ($toolbarActionMode) {
         'segmented' => 'flex h-9 items-center gap-1.5 px-3 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50',
         'dropdown-item' => 'flex w-full items-center gap-1.5 px-3 py-1.5 text-left text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50',
-        default => $this->toolbarActionClasses(),
+        default => $action->isPrimary()
+            ? ($this->toolbarActionPrimaryClasses() ?? 'flex items-center gap-1.5 rounded-lg border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary,#4f46e5)] px-3 py-2 text-sm font-medium text-[var(--dt-primary-text,#ffffff)] transition-colors duration-150 hover:border-[var(--dt-primary-hover,#4338ca)] hover:bg-[var(--dt-primary-hover,#4338ca)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] focus:ring-offset-1')
+            : $this->toolbarActionClasses(),
     };
     $toolbarActionClass = $action->getCssClass() !== '' ? $action->getCssClass() : $toolbarActionDefaultClass;
 @endphp

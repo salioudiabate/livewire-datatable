@@ -35,9 +35,12 @@ trait HasDensity
         $this->density = $this->defaultDensity();
     }
 
+    /**
+     * Global default from config('livewire-datatable.density_toggle'); override per table.
+     */
     public function showDensityToggle(): bool
     {
-        return true;
+        return (bool) config('livewire-datatable.density_toggle', true);
     }
 
     /**

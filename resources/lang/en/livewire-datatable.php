@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 return [
+    'badges_more' => ':count more: :list',
     'search' => 'Search...',
     'all' => 'All',
     'yes' => 'Yes',

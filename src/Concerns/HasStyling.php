@@ -51,6 +51,44 @@ trait HasStyling
         return (string) config('livewire-datatable.classes.td', '');
     }
 
+    /**
+     * Column::badges() styling. null (the default) keeps the package's own classes, written in
+     * columns/badges.blade.php so Tailwind's scan of the package views picks them up.
+     */
+    /**
+     * Column::badges() "+N" trigger and popover. Badge colors themselves come from config
+     * classes.badge_variants (see Support\Badge).
+     */
+    public function badgeMoreClasses(): ?string
+    {
+        return config('livewire-datatable.classes.badge_more');
+    }
+
+    public function badgePopoverClasses(): ?string
+    {
+        return config('livewire-datatable.classes.badge_popover');
+    }
+
+    public function toggleClasses(): ?string
+    {
+        return config('livewire-datatable.classes.toggle');
+    }
+
+    public function toggleOnClasses(): ?string
+    {
+        return config('livewire-datatable.classes.toggle_on');
+    }
+
+    public function toggleKnobClasses(): ?string
+    {
+        return config('livewire-datatable.classes.toggle_knob');
+    }
+
+    public function toolbarActionPrimaryClasses(): ?string
+    {
+        return config('livewire-datatable.classes.toolbar_action_primary');
+    }
+
     public function paginationWrapperClasses(): string
     {
         return (string) config('livewire-datatable.classes.pagination_wrapper', '');

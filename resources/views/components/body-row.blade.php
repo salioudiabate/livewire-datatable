@@ -28,7 +28,7 @@
             @if ($style = $this->frozenColumnStyle($column, $columns)) style="{{ $style }}" @endif
         >
             @if ($column->getView())
-                @include($column->getView(), ['row' => $row, 'value' => data_get($row, $column->getField())])
+                @include($column->getView(), ['row' => $row, 'value' => data_get($row, $column->getField()), 'column' => $column])
             @else
                 {{ $column->renderValue(data_get($row, $column->getField()), $row) }}
             @endif

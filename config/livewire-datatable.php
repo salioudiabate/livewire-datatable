@@ -41,6 +41,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Density toggle & refresh event
+    |--------------------------------------------------------------------------
+    |
+    | density_toggle: show the compact/comfortable/spacious switch in the
+    | toolbar (override showDensityToggle() per table).
+    |
+    | refresh_event: a Livewire event every table re-renders on, e.g.
+    | 'refresh-table' dispatched by a modal after saving. null disables it.
+    |
+    */
+    'density_toggle' => true,
+
+    'refresh_event' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Default styling hooks
     |--------------------------------------------------------------------------
     |
@@ -134,6 +150,20 @@ return [
         // look as the built-in Columns dropdown panel. z-20 for the same
         // reason as columns_dropdown above: must outrank the sticky
         // header's z-index: 10.
+        // Column::badges(): each badge, the "+N" trigger and the popover listing
+        // the rest. null keeps the package defaults (see columns/badges.blade.php).
+        // Per variant (gray, primary, success, danger, warning, info), for
+        // Column::badge()/badges() and Badge::html(). Only the variants you
+        // list are replaced, e.g. ['gray' => 'badge badge-gray'].
+        'badge_variants' => [],
+        'badge_more' => null,
+        'badge_popover' => null,
+        // Column::toggle(): the switch, its "on" state (added) and the knob.
+        'toggle' => null,
+        'toggle_on' => null,
+        'toggle_knob' => null,
+        // ToolbarAction::primary().
+        'toolbar_action_primary' => null,
         'toolbar_action_dropdown' => 'absolute right-0 z-20 mt-1 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg shadow-slate-100',
 
         // Global only — Laravel renders the paginator's view (tailwind.blade.php

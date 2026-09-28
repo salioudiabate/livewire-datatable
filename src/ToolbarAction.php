@@ -46,6 +46,8 @@ final class ToolbarAction
 
     private ?string $cssClass = null;
 
+    private bool $primary = false;
+
     private ?string $icon = null;
 
     private ?string $permission = null;
@@ -111,6 +113,22 @@ final class ToolbarAction
         $this->confirmMessage = $message;
 
         return $this;
+    }
+
+    /**
+     * The main call to action of the toolbar (e.g. "New user"): filled with the theme's primary
+     * color (config classes.toolbar_action_primary). A cssClass() still wins.
+     */
+    public function primary(bool $primary = true): static
+    {
+        $this->primary = $primary;
+
+        return $this;
+    }
+
+    public function isPrimary(): bool
+    {
+        return $this->primary;
     }
 
     public function cssClass(string $class): static

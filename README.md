@@ -235,6 +235,27 @@ Column::make('Status', 'status')
 
 `format()` and `exportUsing()` are intentionally separate: a `format()` closure is free to return markup for on-screen display, which would be meaningless (or wrong) written into a CSV cell. Exports use the raw value unless `exportUsing()` is set.
 
+### Ready-made cells: badges and switches
+
+```php
+use Salioudiabate\LivewireDatatable\Support\Badge;
+
+// One badge; the variant is fixed or chosen per row (gray, primary, success, danger, warning, info).
+Column::make('Type', 'type')->badge(fn ($type) => $type === 'admin' ? 'danger' : 'gray'),
+
+// A list: the first 2, then "+N" showing the rest on hover (pinned open on click). Exports every label.
+Column::make('Roles', 'roles')->badges(visible: 2, label: fn (Role $role) => $role->name),
+
+// A boolean as a switch. Clicking calls $this->toggleActive($key) through runColumnToggle(), which
+// re-checks server-side that the column is a toggle and that $enabled allows the row.
+Column::make('Active', 'is_active')->toggle('toggleActive', enabled: fn (User $user) => Gate::allows('update', $user)),
+
+// A badge inside a richer format() cell (the label is escaped).
+Column::make('Name', 'name')->format(fn ($name, $row) => new HtmlString(e($name).' '.Badge::html('New', 'info'))),
+```
+
+The toggle's action must still authorize itself: `$enabled` only decides who gets a clickable switch. Colors come from `config('livewire-datatable.classes.badge_variants')`, `toggle`, `toggle_on` and `toggle_knob`; the defaults use the `--dt-*` theme variables.
+
 Dot-notation fields (`'author.name'`) work for display and for the default Eloquent search (one level of relation depth via `whereHas`); for anything deeper, use `searchable(Closure)`.
 
 ## Filters
@@ -800,6 +821,18 @@ ToolbarActionGroup::make([
 `->icon($svg)` on the group sets the icon shown on the dropdown *trigger* button itself (`dropdown($label, $icon)` is shorthand for calling both in one line — either order works, and calling `dropdown()` again without an icon argument doesn't clear one already set). `->icon()`/`->cssClass()` on each individual `ToolbarAction` inside the group style that one item, the same as a standalone action — this applies whether the group renders as a segmented control or a dropdown menu.
 
 Styling follows the same hooks as everything else: `->cssClass()` on the action (or group) overrides the default, which otherwise comes from `toolbarActionClasses()` / `toolbarActionGroupClasses()` / `toolbarActionDropdownClasses()` (see [Styling hooks](#styling-hooks)) — the dropdown's trigger button uses `toolbarActionClasses()` like any standalone action, only the open menu panel has its own hook.
+
+### Primary action, density toggle, refresh event
+
+```php
+ToolbarAction::make('New user')->action('create')->primary(), // filled with the theme color
+```
+
+```php
+// config/livewire-datatable.php
+'density_toggle' => false,           // hide the density switch on every table
+'refresh_event' => 'refresh-table',  // every table re-renders when this Livewire event fires
+```
 
 ## Custom confirmation dialog
 
