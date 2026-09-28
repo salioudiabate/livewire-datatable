@@ -21,7 +21,7 @@
                     <button
                         type="button"
                         @if ($action->needsConfirmation())
-                            x-on:click="confirm(@js($action->getConfirmMessage())) && $wire.runBulkAction('{{ $action->getMethod() }}')"
+                            x-on:click="{!! \Salioudiabate\LivewireDatatable\Support\ConfirmScript::make($action->getConfirmMessage(), '$wire.runBulkAction('.\Illuminate\Support\Js::from($action->getMethod()).')') !!}"
                         @else
                             wire:click="runBulkAction('{{ $action->getMethod() }}')"
                         @endif

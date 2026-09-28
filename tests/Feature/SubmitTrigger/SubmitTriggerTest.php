@@ -109,7 +109,7 @@ it('resolves a closure submit() data payload against the component\'s current st
         ->assertSeeHtml('value="widget"');
 });
 
-it('includes the confirm() guard on a submit-triggered toolbar action', function () {
+it('guards a submit-triggered toolbar action with the overridable confirmation', function () {
     Livewire::test(new class extends PostsTable
     {
         public function toolbarActions(): array
@@ -118,7 +118,10 @@ it('includes the confirm() guard on a submit-triggered toolbar action', function
                 ToolbarAction::make('Export PDF')->submit('/export-pdf')->confirm('Generate the PDF?'),
             ];
         }
-    })->assertSeeHtml('confirm(&#039;Generate the PDF?&#039;)');
+    })
+        ->assertSeeHtml('window.LivewireDatatable?.confirm')
+        ->assertSeeHtml('&#039;Generate the PDF?&#039;')
+        ->assertSeeHtml('$el.submit()');
 });
 
 it('renders a submit-triggered row action resolved per-row', function () {
@@ -160,4 +163,37 @@ it('sends the current selection as selected[] on a submit-triggered bulk action'
         ->assertSeeHtml('name="selected[]"')
         ->assertSeeHtml('value="1"')
         ->assertSeeHtml('value="2"');
+});
+
+it('routes every wire-triggered confirmation through window.LivewireDatatable.confirm, falling back to confirm()', function () {
+    DB::table('dt_test_posts')->insert([
+        'title' => 'Alpha', 'status' => 'published', 'views' => 10, 'created_at' => now(), 'updated_at' => now(),
+    ]);
+
+    $html = Livewire::test(new class extends DeletablePostsTable
+    {
+        public function toolbarActions(): array
+        {
+            return [ToolbarAction::make('Clear')->action('clearAll')->confirm('Clear everything?')];
+        }
+
+        public function rowActions(): array
+        {
+            return [RowAction::make('Delete')->action('deleteRow')->confirm('Delete "this" row?')];
+        }
+
+        public function bulkActions(): array
+        {
+            return [BulkAction::make('destroySelected', 'Delete')->confirm('Delete selected?')];
+        }
+    })->set('selected', ['1'])->html();
+
+    expect($html)
+        ->toContain('window.LivewireDatatable?.confirm ?? ((message, proceed) => window.confirm(message) && proceed())')
+        ->toContain("\$wire.runToolbarAction('clearAll')")
+        ->toContain("\$wire.runBulkAction('destroySelected')")
+        ->toContain("\$wire.runRowAction('deleteRow'")
+        // The message is JS-encoded: a quote in it cannot break out of the attribute.
+        ->toContain('Delete \\u0022this\\u0022 row?')
+        ->not->toContain('confirm(\'Clear everything?\') &&');
 });

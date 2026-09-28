@@ -63,6 +63,7 @@ class UsersTable extends DataTableComponent
 - [Row actions](#row-actions)
 - [Clickable rows](#clickable-rows)
 - [Toolbar actions](#toolbar-actions)
+- [Custom confirmation dialog](#custom-confirmation-dialog)
 - [Theming](#theming)
 - [Styling hooks](#styling-hooks)
 - [Translations](#translations)
@@ -799,6 +800,20 @@ ToolbarActionGroup::make([
 `->icon($svg)` on the group sets the icon shown on the dropdown *trigger* button itself (`dropdown($label, $icon)` is shorthand for calling both in one line — either order works, and calling `dropdown()` again without an icon argument doesn't clear one already set). `->icon()`/`->cssClass()` on each individual `ToolbarAction` inside the group style that one item, the same as a standalone action — this applies whether the group renders as a segmented control or a dropdown menu.
 
 Styling follows the same hooks as everything else: `->cssClass()` on the action (or group) overrides the default, which otherwise comes from `toolbarActionClasses()` / `toolbarActionGroupClasses()` / `toolbarActionDropdownClasses()` (see [Styling hooks](#styling-hooks)) — the dropdown's trigger button uses `toolbarActionClasses()` like any standalone action, only the open menu panel has its own hook.
+
+## Custom confirmation dialog
+
+Every `->confirm()` — on row, bulk and toolbar actions, `submit()` forms included — calls `window.LivewireDatatable.confirm(message, proceed)` when your app defines it, and falls back to the browser's `confirm()` otherwise. Call `proceed()` to run the action; not calling it cancels it. Plug in any dialog, e.g. [salioudiabate/notify](https://packagist.org/packages/salioudiabate/notify):
+
+```html
+<script>
+    window.LivewireDatatable = {
+        confirm: (message, proceed) => Notify.confirm({ title: message, danger: true, onConfirm: proceed }),
+    };
+</script>
+```
+
+The action is still re-authorized server-side when it runs; the dialog is only a UX guard.
 
 ## Theming
 

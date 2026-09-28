@@ -25,7 +25,8 @@
 
     $submitFormClosePrefix = ($formCloseDropdown ?? false) ? 'open = false; ' : '';
     $submitFormOnSubmit = $submitFormClosePrefix.(($formConfirm ?? null)
-        ? "if (! confirm('".addslashes($formConfirm)."')) { \$event.preventDefault(); return; } submitting = true; setTimeout(() => submitting = false, 8000)"
+        // form.submit() skips the submit event, so the confirmed submission does not ask again.
+        ? '$event.preventDefault(); '.\Salioudiabate\LivewireDatatable\Support\ConfirmScript::make($formConfirm, 'submitting = true; setTimeout(() => submitting = false, 8000); $el.submit()')
         : 'submitting = true; setTimeout(() => submitting = false, 8000)');
 @endphp
 

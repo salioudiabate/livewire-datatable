@@ -5,6 +5,12 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-09-28
+
+### Added
+
+- `window.LivewireDatatable.confirm(message, proceed)`: when defined, every `->confirm()` (row, bulk and toolbar actions, `submit()` forms) uses it instead of the browser's `confirm()`, so an app can show its own dialog. Without it, behaviour is unchanged.
+
 ## [1.3.1] - 2026-09-27
 
 ### Fixed

@@ -95,7 +95,7 @@
                     <button
                         type="button"
                         @if ($action->needsConfirmation())
-                            x-on:click="open = false; confirm(@js($action->getConfirmMessage())) && $wire.runRowAction(@js($action->getMethod()), @js($this->resolveRowKey($row)))"
+                            x-on:click="open = false; {!! \Salioudiabate\LivewireDatatable\Support\ConfirmScript::make($action->getConfirmMessage(), '$wire.runRowAction('.\Illuminate\Support\Js::from($action->getMethod()).', '.\Illuminate\Support\Js::from($this->resolveRowKey($row)).')') !!}"
                         @else
                             wire:click="runRowAction(@js($action->getMethod()), @js($this->resolveRowKey($row)))"
                         @endif
