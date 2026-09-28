@@ -33,7 +33,7 @@ final class MultiSelectFilter extends Filter
 
     public function isActive(array $filterValues): bool
     {
-        $value = $filterValues[$this->key] ?? null;
+        $value = $filterValues[$this->key()] ?? null;
 
         return is_array($value) && $value !== [];
     }
@@ -54,6 +54,6 @@ final class MultiSelectFilter extends Filter
             return $dataSource;
         }
 
-        return $dataSource->applyWhereIn($this->key, $value);
+        return $dataSource->applyWhereIn($this->getColumn(), $value);
     }
 }

@@ -24,6 +24,6 @@ final class NumberFilter extends Filter
             return $dataSource;
         }
 
-        return $dataSource->applyWhere($this->key, '=', is_numeric($value) ? $value + 0 : $value);
+        return $dataSource->applyWhere($this->getColumn(), '=', is_numeric($value) ? $value + 0 : $value);
     }
 }

@@ -47,6 +47,6 @@ final class SelectFilter extends Filter
             return $dataSource;
         }
 
-        return $dataSource->applyWhere($this->key, '=', $value);
+        return $dataSource->applyWhere($this->getColumn(), '=', $value);
     }
 }

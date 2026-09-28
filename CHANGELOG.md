@@ -5,6 +5,16 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-09-29
+
+### Fixed
+
+- Filters on a qualified column (`SelectFilter::make('Class', 'classrooms.level_id')`, needed as soon as the query joins) now filter. `wire:model="filterValues.classrooms.level_id"` nested the value (`filterValues['classrooms']['level_id']`), so the filter never saw it and was silently ignored. The state key now replaces dots (`classrooms__level_id`) while the query keeps the qualified column.
+
+### Added
+
+- `Filter::column($column)` to query another column than the filter's key; `Filter::getColumn()`.
+
 ## [1.5.0] - 2026-09-28
 
 ### Added

@@ -14,6 +14,8 @@ abstract class Filter implements FilterContract
 
     protected ?string $cssClass = null;
 
+    protected ?string $column = null;
+
     final public function __construct(
         protected readonly string $label,
         protected readonly string $key,
@@ -60,9 +62,33 @@ abstract class Filter implements FilterContract
         return $this;
     }
 
+    /**
+     * The key under which this filter's value lives in filterValues (and the URL). A qualified
+     * column (`table.column`, needed as soon as the query joins) is kept for the query, but its
+     * dots are replaced here: wire:model="filterValues.table.column" would otherwise nest the
+     * value (filterValues['table']['column']) and the filter would never see it.
+     */
     public function key(): string
     {
-        return $this->key;
+        return str_replace('.', '__', $this->key);
+    }
+
+    /**
+     * Queries another column than the key, e.g. make('Classe', 'classroom')->column('classrooms.id').
+     */
+    public function column(string $column): static
+    {
+        $this->column = $column;
+
+        return $this;
+    }
+
+    /**
+     * The column the default behavior filters on: column() if set, otherwise the key as given.
+     */
+    public function getColumn(): string
+    {
+        return $this->column ?? $this->key;
     }
 
     public function label(): string
@@ -72,19 +98,19 @@ abstract class Filter implements FilterContract
 
     public function stateKeys(): array
     {
-        return [$this->key];
+        return [$this->key()];
     }
 
     public function isActive(array $filterValues): bool
     {
-        $value = $filterValues[$this->key] ?? null;
+        $value = $filterValues[$this->key()] ?? null;
 
         return $value !== null && $value !== '';
     }
 
     public function apply(DataSource $dataSource, array $filterValues): DataSource
     {
-        $value = $filterValues[$this->key] ?? null;
+        $value = $filterValues[$this->key()] ?? null;
 
         return $this->resolveUsing($dataSource, $value) ?? $this->applyDefault($dataSource, $value);
     }

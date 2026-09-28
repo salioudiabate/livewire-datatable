@@ -17,12 +17,12 @@ abstract class RangeFilter extends Filter
 {
     public function fromKey(): string
     {
-        return "{$this->key}_from";
+        return $this->key().'_from';
     }
 
     public function toKey(): string
     {
-        return "{$this->key}_to";
+        return $this->key().'_to';
     }
 
     public function stateKeys(): array
@@ -50,11 +50,11 @@ abstract class RangeFilter extends Filter
         }
 
         if ($from !== null && $from !== '') {
-            $dataSource = $dataSource->applyWhere($this->key, '>=', $this->castBound($from));
+            $dataSource = $dataSource->applyWhere($this->getColumn(), '>=', $this->castBound($from));
         }
 
         if ($to !== null && $to !== '') {
-            $dataSource = $dataSource->applyWhere($this->key, '<=', $this->castBound($to));
+            $dataSource = $dataSource->applyWhere($this->getColumn(), '<=', $this->castBound($to));
         }
 
         return $dataSource;

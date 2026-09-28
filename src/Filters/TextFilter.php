@@ -24,6 +24,6 @@ final class TextFilter extends Filter
             return $dataSource;
         }
 
-        return $dataSource->applySearch((string) $value, [$this->key]);
+        return $dataSource->applySearch((string) $value, [$this->getColumn()]);
     }
 }

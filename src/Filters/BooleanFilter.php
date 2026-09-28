@@ -14,7 +14,7 @@ final class BooleanFilter extends Filter
 {
     public function isActive(array $filterValues): bool
     {
-        $value = $filterValues[$this->key] ?? null;
+        $value = $filterValues[$this->key()] ?? null;
 
         return $value !== null && $value !== '';
     }
@@ -41,6 +41,6 @@ final class BooleanFilter extends Filter
             return $dataSource;
         }
 
-        return $dataSource->applyWhere($this->key, '=', $bool);
+        return $dataSource->applyWhere($this->getColumn(), '=', $bool);
     }
 }
