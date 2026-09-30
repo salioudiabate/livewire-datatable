@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Salioudiabate\LivewireDatatable\Concerns;
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Salioudiabate\LivewireDatatable\Column;
+use Salioudiabate\LivewireDatatable\DataSources\Concerns\BuildsSearchClauses;
 use Salioudiabate\LivewireDatatable\DataSources\Concerns\EscapesLikeTerms;
 use Salioudiabate\LivewireDatatable\DataSources\DataSource;
 use Salioudiabate\LivewireDatatable\DataSources\DataSourceFactory;
 
 trait HasSearch
 {
+    use BuildsSearchClauses;
     use EscapesLikeTerms;
 
     public string $search = '';
@@ -87,9 +88,8 @@ trait HasSearch
         }
 
         $escaped = $this->escapeLikeTerm($term);
-        $isEloquent = $raw instanceof EloquentBuilder;
 
-        $raw->where(function (mixed $query) use ($columns, $term, $escaped, $isEloquent) {
+        $raw->where(function (mixed $query) use ($columns, $term, $escaped) {
             foreach ($columns as $column) {
                 $using = $column->getSearchUsing();
 
@@ -99,16 +99,7 @@ trait HasSearch
                     continue;
                 }
 
-                $field = $column->getField();
-
-                if ($isEloquent && str_contains($field, '.')) {
-                    [$relation, $relationField] = explode('.', $field, 2);
-                    $query->orWhereHas($relation, fn (mixed $relationQuery) => $relationQuery->where($relationField, 'like', "%{$escaped}%"));
-
-                    continue;
-                }
-
-                $query->orWhere($field, 'like', "%{$escaped}%");
+                $this->orWhereSearch($query, $column->getField(), $escaped);
             }
         });
 

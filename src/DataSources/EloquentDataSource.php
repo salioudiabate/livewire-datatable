@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use InvalidArgumentException;
+use Salioudiabate\LivewireDatatable\DataSources\Concerns\BuildsSearchClauses;
 use Salioudiabate\LivewireDatatable\DataSources\Concerns\EscapesLikeTerms;
 
 final class EloquentDataSource implements DataSource, Deletable
 {
+    use BuildsSearchClauses;
     use EscapesLikeTerms;
 
     /**
@@ -31,17 +33,7 @@ final class EloquentDataSource implements DataSource, Deletable
         $clone = clone $this;
         $clone->query = (clone $this->query)->where(function (Builder $query) use ($escaped, $searchableFields) {
             foreach ($searchableFields as $field) {
-                if (str_contains($field, '.')) {
-                    [$relation, $relationField] = explode('.', $field, 2);
-                    $query->orWhereHas(
-                        $relation,
-                        fn (Builder $relationQuery) => $relationQuery->where($relationField, 'like', "%{$escaped}%")
-                    );
-
-                    continue;
-                }
-
-                $query->orWhere($field, 'like', "%{$escaped}%");
+                $this->orWhereSearch($query, $field, $escaped);
             }
         });
 

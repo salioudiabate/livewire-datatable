@@ -9,10 +9,12 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use InvalidArgumentException;
 use RuntimeException;
+use Salioudiabate\LivewireDatatable\DataSources\Concerns\BuildsSearchClauses;
 use Salioudiabate\LivewireDatatable\DataSources\Concerns\EscapesLikeTerms;
 
 final class QueryBuilderDataSource implements DataSource, Deletable
 {
+    use BuildsSearchClauses;
     use EscapesLikeTerms;
 
     public function __construct(private Builder $query) {}
@@ -28,7 +30,7 @@ final class QueryBuilderDataSource implements DataSource, Deletable
         $clone = clone $this;
         $clone->query = (clone $this->query)->where(function (Builder $query) use ($escaped, $searchableFields) {
             foreach ($searchableFields as $field) {
-                $query->orWhere($field, 'like', "%{$escaped}%");
+                $this->orWhereSearch($query, $field, $escaped);
             }
         });
 

@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use Salioudiabate\LivewireDatatable\DataSources\Concerns\BuildsSearchClauses;
 use Salioudiabate\LivewireDatatable\DataSources\EloquentDataSource;
 use Salioudiabate\LivewireDatatable\Tests\Fixtures\Models\Post;
 
@@ -66,4 +69,43 @@ it('records a failure instead of aborting the batch on a foreign key violation',
         ->and($summary->hasFailures())->toBeTrue()
         ->and(array_keys($summary->failures))->toBe([1])
         ->and(Post::query()->whereKey(1)->exists())->toBeTrue();
+});
+
+it('qualifies a plain searchable column with the main table when the query has joins', function () {
+    DB::table('dt_test_authors')->insert(['id' => 1, 'name' => 'Jane Doe']);
+    DB::table('dt_test_posts')->update(['dt_test_author_id' => 1]);
+
+    // Both tables have an "id" column: unqualified, the search would be ambiguous.
+    $query = Post::query()->select('dt_test_posts.*')->join('dt_test_authors', 'dt_test_authors.id', '=', 'dt_test_posts.dt_test_author_id');
+    $result = (new EloquentDataSource($query))->applySearch('3', ['id'])->paginate(perPage: 10, page: 1);
+
+    expect(collect($result->items)->pluck('id')->all())->toBe([3]);
+});
+
+it('treats "table.column" as a qualified column when it is not a relation', function () {
+    DB::table('dt_test_authors')->insert(['id' => 1, 'name' => 'Jane Doe']);
+    DB::table('dt_test_posts')->where('id', 2)->update(['dt_test_author_id' => 1]);
+
+    $query = Post::query()->select('dt_test_posts.*')->join('dt_test_authors', 'dt_test_authors.id', '=', 'dt_test_posts.dt_test_author_id');
+    $result = (new EloquentDataSource($query))->applySearch('jane', ['dt_test_authors.name'])->paginate(perPage: 10, page: 1);
+
+    expect(collect($result->items)->pluck('id')->all())->toBe([2]);
+});
+
+it('searches case-insensitively with ILIKE on PostgreSQL', function () {
+    $search = new class
+    {
+        use BuildsSearchClauses;
+
+        public function operator(mixed $query): string
+        {
+            return $this->likeOperator($query);
+        }
+    };
+    $connection = Mockery::mock(Connection::class);
+    $connection->shouldReceive('getDriverName')->andReturn('pgsql', 'sqlite');
+    $query = Mockery::mock(Builder::class);
+    $query->shouldReceive('getConnection')->andReturn($connection);
+
+    expect($search->operator($query))->toBe('ilike')->and($search->operator($query))->toBe('like');
 });
