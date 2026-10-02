@@ -25,6 +25,8 @@ return [
         'primary_dark' => '#3730a3',
         'primary_light' => '#eef2ff',
         'primary_text' => '#ffffff',
+        // Focus ring (keyboard navigation only): a soft tint of the primary color.
+        'ring' => 'color-mix(in srgb, var(--dt-primary) 25%, transparent)',
     ],
 
     /*
@@ -112,9 +114,9 @@ return [
         // label class common to all of them. Overridable per-filter via
         // Filter::cssClass(), which takes precedence over these.
         'filter_label' => 'text-xs font-medium text-slate-600',
-        'filter_input' => 'w-full min-w-0 rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
-        'filter_select' => 'w-full appearance-none bg-none rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
-        'filter_multiselect' => 'w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
+        'filter_input' => 'w-full min-w-0 rounded-lg border border-slate-200 bg-white py-2 px-3 text-sm text-slate-700 transition-colors duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]',
+        'filter_select' => 'w-full appearance-none bg-none rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]',
+        'filter_multiselect' => 'w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]',
         'bulk_actions_bar' => 'mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm',
         'selection_banner' => 'mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-[var(--dt-primary,#4f46e5)] bg-[var(--dt-primary-light,#eef2ff)] px-4 py-2.5 text-sm text-slate-700',
         'empty_state' => 'px-4 py-10 text-center',
@@ -140,7 +142,7 @@ return [
         // height from py-2 + text-sm's line-height plus their border, so
         // matching that exact recipe (not a fixed height) is what keeps
         // them pixel-identical.
-        'toolbar_action' => 'flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]',
+        'toolbar_action' => 'flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 transition-colors duration-150 hover:bg-slate-50 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]',
         // h-9 lives on each segmented item instead (see toolbar-action.blade.php),
         // not on this wrapper — same two-tier pattern as the density
         // toggle: an auto-height wrapper lets its own border add on top

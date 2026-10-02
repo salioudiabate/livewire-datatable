@@ -11,7 +11,7 @@
     $shown = count($labels) <= $visible + 1 ? $labels : array_slice($labels, 0, $visible);
     $hidden = array_slice($labels, count($shown));
     $badgeVariant = $column->badgeVariant($value, $row);
-    $moreClass = $this->badgeMoreClasses() ?? 'inline-flex cursor-pointer items-center rounded-full bg-[var(--dt-primary-light,#eef2ff)] px-2.5 py-0.5 text-xs font-semibold text-[var(--dt-primary,#4f46e5)] hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)]';
+    $moreClass = $this->badgeMoreClasses() ?? 'inline-flex cursor-pointer items-center rounded-full bg-[var(--dt-primary-light,#eef2ff)] px-2.5 py-0.5 text-xs font-semibold text-[var(--dt-primary,#4f46e5)] hover:brightness-95 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]';
     $popoverClass = $this->badgePopoverClasses() ?? 'fixed z-50 flex max-w-64 flex-wrap gap-1 rounded-xl border border-slate-200 bg-white p-2.5 shadow-lg';
 @endphp
 

@@ -850,7 +850,7 @@ The action is still re-authorized server-side when it runs; the dialog is only a
 
 ## Theming
 
-Colors are CSS custom properties (`--dt-primary`, `--dt-primary-hover`, `--dt-primary-dark`, `--dt-primary-light`, `--dt-primary-text`) scoped to a `.dt-root` wrapper — never the global `:root` — so the package can never silently override your application's own theme variables.
+Colors are CSS custom properties (`--dt-primary`, `--dt-primary-hover`, `--dt-primary-dark`, `--dt-primary-light`, `--dt-primary-text`, `--dt-ring`) scoped to a `.dt-root` wrapper — never the global `:root` — so the package can never silently override your application's own theme variables.
 
 Set them in `config/livewire-datatable.php`:
 
@@ -861,8 +861,11 @@ Set them in `config/livewire-datatable.php`:
     'primary_dark' => '#3730a3',
     'primary_light' => '#eef2ff',
     'primary_text' => '#ffffff',
+    'ring' => 'color-mix(in srgb, var(--dt-primary) 25%, transparent)',
 ],
 ```
+
+`ring` is the focus ring of buttons, inputs and checkboxes. It only shows on keyboard focus (`:focus-visible`), never after a mouse click, as a soft 3px halo.
 
 If your app already has its own brand color variables, alias them instead of duplicating a palette — either approach works:
 

@@ -17,7 +17,7 @@
                 wire:model.live="selected"
                 value="{{ $rowKey }}"
                 wire:key="dt-checkbox-{{ $rowKey }}"
-                class="rounded border-slate-300 text-[var(--dt-primary,#4f46e5)] focus:ring-[var(--dt-primary,#4f46e5)]"
+                class="rounded border-slate-300 text-[var(--dt-primary,#4f46e5)] focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
             />
         </td>
     @endif

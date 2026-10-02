@@ -15,7 +15,7 @@
                 type="checkbox"
                 wire:model.live="selectAll"
                 aria-label="{{ __('livewire-datatable::livewire-datatable.select_all_filtered', ['count' => $this->rows->total()]) }}"
-                class="rounded border-slate-300 text-[var(--dt-primary,#4f46e5)] focus:ring-[var(--dt-primary,#4f46e5)]"
+                class="rounded border-slate-300 text-[var(--dt-primary,#4f46e5)] focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
             />
         </th>
     @endif

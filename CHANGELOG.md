@@ -5,6 +5,12 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2026-10-02
+
+### Changed
+
+- Softer focus rings: buttons, inputs, checkboxes, pagination and row actions only show a ring on keyboard focus (`:focus-visible`), no longer after a mouse click, as a 3px halo of the new `--dt-ring` color (theme key `ring`, default: the primary color at 25%) instead of a solid 2px primary ring. The toggle cell and primary toolbar action lose their ring offset.
+
 ## [1.5.1] - 2026-09-29
 
 ### Fixed

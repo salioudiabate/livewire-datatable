@@ -6,7 +6,7 @@
 @php
     $toggleOn = (bool) $value;
     $toggleEnabled = $column->isToggleEnabled($row);
-    $toggleClass = $this->toggleClasses() ?? 'inline-flex h-6 w-10 items-center rounded-full bg-slate-200 p-[3px] transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] focus:ring-offset-1 disabled:cursor-default disabled:opacity-55 enabled:cursor-pointer';
+    $toggleClass = $this->toggleClasses() ?? 'inline-flex h-6 w-10 items-center rounded-full bg-slate-200 p-[3px] transition-colors duration-150 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))] disabled:cursor-default disabled:opacity-55 enabled:cursor-pointer';
     $toggleOnClass = $this->toggleOnClasses() ?? 'justify-end bg-[var(--dt-primary,#4f46e5)]';
     $toggleKnobClass = $this->toggleKnobClasses() ?? 'block h-[18px] w-[18px] rounded-full bg-white shadow';
 @endphp

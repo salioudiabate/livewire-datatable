@@ -20,7 +20,7 @@
                     wire:loading.attr="disabled"
                     @disabled($paginator->onFirstPage())
                     aria-label="{{ __('livewire-datatable::livewire-datatable.previous') }}"
-                    class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] disabled:pointer-events-none disabled:opacity-40"
+                    class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))] disabled:pointer-events-none disabled:opacity-40"
                 >
                     <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
                     {{ __('livewire-datatable::livewire-datatable.previous') }}
@@ -37,7 +37,7 @@
                     wire:loading.attr="disabled"
                     @disabled(! $paginator->hasMorePages())
                     aria-label="{{ __('livewire-datatable::livewire-datatable.next') }}"
-                    class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] disabled:pointer-events-none disabled:opacity-40"
+                    class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-50 hover:text-slate-800 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))] disabled:pointer-events-none disabled:opacity-40"
                 >
                     {{ __('livewire-datatable::livewire-datatable.next') }}
                     <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
@@ -57,7 +57,7 @@
                         x-on:click="{{ $scrollIntoViewJsSnippet }}"
                         wire:loading.attr="disabled"
                         aria-label="{{ __('livewire-datatable::livewire-datatable.previous') }}"
-                        class="relative inline-flex items-center border-r border-slate-200 bg-white px-2 py-1.5 text-xs font-medium leading-5 text-slate-500 transition ease-in-out duration-150 hover:bg-slate-50 hover:text-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] active:bg-slate-100"
+                        class="relative inline-flex items-center border-r border-slate-200 bg-white px-2 py-1.5 text-xs font-medium leading-5 text-slate-500 transition ease-in-out duration-150 hover:bg-slate-50 hover:text-slate-700 focus:z-10 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))] active:bg-slate-100"
                     >
                         <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
                     </button>
@@ -81,7 +81,7 @@
                                         wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                         x-on:click="{{ $scrollIntoViewJsSnippet }}"
                                         aria-label="{{ __('livewire-datatable::livewire-datatable.goto_page', ['page' => $page]) }}"
-                                        class="relative -ml-px inline-flex items-center border-r border-slate-200 bg-white px-3 py-1.5 text-xs font-medium leading-5 text-slate-600 transition ease-in-out duration-150 hover:bg-[var(--dt-primary-light,#eef2ff)] hover:text-slate-800 focus:z-10 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] active:bg-slate-100"
+                                        class="relative -ml-px inline-flex items-center border-r border-slate-200 bg-white px-3 py-1.5 text-xs font-medium leading-5 text-slate-600 transition ease-in-out duration-150 hover:bg-[var(--dt-primary-light,#eef2ff)] hover:text-slate-800 focus:z-10 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))] active:bg-slate-100"
                                     >
                                         {{ $page }}
                                     </button>
@@ -98,7 +98,7 @@
                         x-on:click="{{ $scrollIntoViewJsSnippet }}"
                         wire:loading.attr="disabled"
                         aria-label="{{ __('livewire-datatable::livewire-datatable.next') }}"
-                        class="relative -ml-px inline-flex items-center bg-white px-2 py-1.5 text-xs font-medium leading-5 text-slate-500 transition ease-in-out duration-150 hover:bg-slate-50 hover:text-slate-700 focus:z-10 focus:outline-none focus:ring-2 focus:ring-[var(--dt-primary,#4f46e5)] active:bg-slate-100"
+                        class="relative -ml-px inline-flex items-center bg-white px-2 py-1.5 text-xs font-medium leading-5 text-slate-500 transition ease-in-out duration-150 hover:bg-slate-50 hover:text-slate-700 focus:z-10 focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))] active:bg-slate-100"
                     >
                         <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
                     </button>
