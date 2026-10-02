@@ -7,6 +7,7 @@
             --dt-primary-dark: {{ $theme['primary_dark'] ?? '#3730a3' }};
             --dt-primary-light: {{ $theme['primary_light'] ?? '#eef2ff' }};
             --dt-primary-text: {{ $theme['primary_text'] ?? '#ffffff' }};
+            --dt-focus: {{ $theme['focus'] ?? 'var(--dt-primary)' }};
             --dt-ring: {{ $theme['ring'] ?? 'color-mix(in srgb, var(--dt-primary) 25%, transparent)' }};
         }
     </style>

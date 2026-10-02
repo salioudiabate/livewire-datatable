@@ -36,7 +36,7 @@
                     type="text"
                     wire:model.live.debounce.300ms="filterSearchTerms.{{ $filter->key() }}"
                     placeholder="{{ __('livewire-datatable::livewire-datatable.search') }}"
-                    class="w-full rounded-md border border-slate-200 px-2.5 py-1.5 text-sm text-slate-700 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
+                    class="w-full rounded-md border border-slate-200 px-2.5 py-1.5 text-sm text-slate-700 focus:border-[var(--dt-focus,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
                 />
             </div>
             <ul class="max-h-56 overflow-y-auto py-1">

@@ -5,6 +5,12 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.4] - 2026-10-02
+
+### Added
+
+- Theme key `focus` (`--dt-focus`, default: the primary color): border of a focused input or select, so it can match the ring color.
+
 ## [1.5.3] - 2026-10-02
 
 ### Changed

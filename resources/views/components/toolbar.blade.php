@@ -9,7 +9,7 @@
                     type="text"
                     wire:model.live.debounce.300ms="search"
                     placeholder="{{ $this->searchPlaceholder() }}"
-                    class="w-full max-w-xs rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-700 transition-colors duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
+                    class="w-full max-w-xs rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-700 transition-colors duration-150 placeholder:text-slate-400 hover:border-slate-300 focus:border-[var(--dt-focus,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
                 />
             </div>
         @endif
@@ -103,7 +103,7 @@
                 <select
                     wire:model.live="perPage"
                     aria-label="{{ __('livewire-datatable::livewire-datatable.per_page') }}"
-                    class="appearance-none bg-none rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm text-slate-600 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-primary,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
+                    class="appearance-none bg-none rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm text-slate-600 transition-colors duration-150 hover:border-slate-300 focus:border-[var(--dt-focus,#4f46e5)] focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--dt-ring,rgb(79_70_229/0.25))]"
                 >
                     @foreach ($this->perPageOptions() as $option)
                         <option value="{{ $option }}">{{ $option }}</option>
