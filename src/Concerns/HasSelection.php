@@ -10,11 +10,13 @@ use Salioudiabate\LivewireDatatable\DataSources\DataSource;
 use Salioudiabate\LivewireDatatable\Exceptions\MissingRecordKeyException;
 
 /**
- * The header checkbox selects the *current page* only (cheap, immediate) —
- * "select all across every filtered page" is a separate, explicit opt-in
- * action (selectAllFiltered()) surfaced via a banner once the current page
- * is fully selected, rather than eagerly plucking every matching key on a
- * single click.
+ * The header checkbox selects every row matching the current search/filters,
+ * across all pages (selectAllScope() 'filtered', the default — like
+ * rappasoft/laravel-livewire-tables), with a banner to clear it. Set
+ * config('livewire-datatable.select_all') or override selectAllScope() to
+ * 'page' to select the current page only instead, with the banner offering
+ * to expand to every filtered row (selectAllFiltered()) — cheaper for very
+ * large tables, since no key is plucked beyond the page on a single click.
  */
 trait HasSelection
 {
@@ -77,6 +79,15 @@ trait HasSelection
         $this->clearSelected();
     }
 
+    /**
+     * What the header checkbox selects: 'filtered' (every row matching the
+     * current search/filters, all pages) or 'page' (the current page only).
+     */
+    public function selectAllScope(): string
+    {
+        return config('livewire-datatable.select_all', 'filtered') === 'page' ? 'page' : 'filtered';
+    }
+
     public function isCurrentPageFullySelected(): bool
     {
         $pageKeys = $this->visibleRowKeys();
@@ -93,12 +104,20 @@ trait HasSelection
 
     public function updatedSelected(): void
     {
-        $this->selectAll = $this->isCurrentPageFullySelected();
+        $this->selectAll = $this->selectAllScope() === 'page'
+            ? $this->isCurrentPageFullySelected()
+            : $this->isAllFilteredSelected();
     }
 
     public function updatedSelectAll(bool $value): void
     {
-        $this->selected = $value ? $this->visibleRowKeys() : [];
+        if (! $value) {
+            $this->clearSelected();
+
+            return;
+        }
+
+        $this->selected = $this->selectAllScope() === 'page' ? $this->visibleRowKeys() : $this->allFilteredKeys();
     }
 
     public function selectAllFiltered(): void

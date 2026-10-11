@@ -207,6 +207,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Select all
+    |--------------------------------------------------------------------------
+    |
+    | What the header checkbox selects: 'filtered' selects every row matching
+    | the current search/filters across all pages (a banner then offers to
+    | clear it); 'page' selects the current page only, the banner offering to
+    | expand to every filtered row. Overridable per table via selectAllScope().
+    |
+    */
+    'select_all' => 'filtered',
+
+    /*
+    |--------------------------------------------------------------------------
     | Frozen columns
     |--------------------------------------------------------------------------
     |

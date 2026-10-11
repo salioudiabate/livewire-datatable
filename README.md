@@ -468,7 +468,18 @@ public function archiveSelected(): void
 
 `icon()` (also on `RowAction` and `ToolbarAction`) takes raw inline SVG/HTML, not an icon name — there's no icon-name registry anywhere in the package, so you bring your own markup, the same as every built-in button.
 
-The header checkbox selects the current page only; once every row on the page is checked, a banner offers to expand the selection to every row matching the current search/filters across all pages (`selectAllFiltered()`) — without eagerly fetching every key on a single accidental click.
+The header checkbox selects every row matching the current search/filters, across all pages — like `rappasoft/laravel-livewire-tables` — and a banner then offers to clear the whole selection. Unticking a single row unticks the header checkbox; changing the search or a filter clears the selection.
+
+For a very large table, select the current page only instead — set `'select_all' => 'page'` in `config/livewire-datatable.php`, or per table:
+
+```php
+public function selectAllScope(): string
+{
+    return 'page';
+}
+```
+
+The banner then offers to expand the selection to every filtered row (`selectAllFiltered()`), so no key beyond the page is fetched on a single click.
 
 Every bulk action is dispatched through `runBulkAction($method)`, which re-checks `permission()` before invoking it — the button not being rendered is not the same as the action being protected, since Livewire actions are directly callable by name.
 

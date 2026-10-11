@@ -5,6 +5,16 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-10-11
+
+### Changed
+
+- The header checkbox now selects every row matching the current search/filters, across all pages (like `rappasoft/laravel-livewire-tables`), instead of the current page only; the banner offers to clear the selection. Unticking it clears the whole selection, and the header checkbox stays ticked only while every filtered row is selected.
+
+### Added
+
+- Config `select_all` (`'filtered'` by default, or `'page'`) and per-table `selectAllScope()` to keep the previous behavior: the header checkbox selects the current page, the banner offers to expand to every filtered row (`selectAllFiltered()`).
+
 ## [1.5.4] - 2026-10-02
 
 ### Added
