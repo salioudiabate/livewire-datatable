@@ -5,6 +5,12 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-10-16
+
+### Fixed
+
+- Exports (CSV, Excel, PDF) no longer crash on a column whose raw value is an object ("Object of class App\Enums\Gender could not be converted to string"). `Column::exportValue()` now always returns text, a number or null (`Export\ExportValue`): an enum exports its `label()` when it has one (else its value or name), a date `Y-m-d` (or `Y-m-d H:i:s`), a boolean `1`/`0`, an Htmlable/Stringable its text, a list its items comma-separated. Applies to `exportUsing()` results too.
+
 ## [1.6.0] - 2026-10-11
 
 ### Changed

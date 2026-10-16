@@ -233,7 +233,7 @@ Column::make('Status', 'status')
     ->toggleable(visibleByDefault: false);                // ...hidden by default
 ```
 
-`format()` and `exportUsing()` are intentionally separate: a `format()` closure is free to return markup for on-screen display, which would be meaningless (or wrong) written into a CSV cell. Exports use the raw value unless `exportUsing()` is set.
+`format()` and `exportUsing()` are intentionally separate: a `format()` closure is free to return markup for on-screen display, which would be meaningless (or wrong) written into a CSV cell. Exports use the raw value unless `exportUsing()` is set. Whatever the export gets is turned into plain text or a number first (`Export\ExportValue`): an enum exports its `label()` (else its value), a date `Y-m-d` (with `H:i:s` when it has a time), a boolean `1`/`0`, markup its text, a list its items comma-separated — never a crash on an object.
 
 ### Ready-made cells: badges and switches
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Salioudiabate\LivewireDatatable;
 
 use Closure;
+use Salioudiabate\LivewireDatatable\Export\ExportValue;
 
 /**
  * Fluent, immutable-style column definition. `format()`/`exportUsing()` are
@@ -370,13 +371,18 @@ final class Column
         return $this->formatter !== null ? ($this->formatter)($value, $row) : $value;
     }
 
-    public function exportValue(mixed $value, mixed $row): mixed
+    /**
+     * The cell value written to an export: exportUsing() when set, else the raw value (a badges
+     * column exports all its labels). Always a string, a number or null (see Export\ExportValue):
+     * enums, dates, Htmlable… are converted instead of crashing the export.
+     */
+    public function exportValue(mixed $value, mixed $row): string|int|float|null
     {
         if ($this->exportUsing !== null) {
-            return ($this->exportUsing)($value, $row);
+            return ExportValue::normalize(($this->exportUsing)($value, $row));
         }
 
         // A badges column exports every label (not only the visible ones), comma-separated.
-        return $this->isBadges() ? implode(', ', $this->badgeLabels($value, $row)) : $value;
+        return ExportValue::normalize($this->isBadges() ? implode(', ', $this->badgeLabels($value, $row)) : $value);
     }
 }
