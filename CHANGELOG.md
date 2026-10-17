@@ -5,6 +5,13 @@ All notable changes to `livewire-datatable` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-10-17
+
+### Added
+
+- Cards on phones: below 640px (`mobile_cards_breakpoint`), each row is laid out as a card instead of a table row that scrolls sideways. The first column is the card's title, every other cell shows its column label next to its value (`data-label`), the selection checkbox and the row-actions menu sit in the card's corners. Pure CSS on the same markup; on by default (`mobile_cards`), per table with `mobileCards()` / `mobileCardsBreakpoint()`.
+- `Column::cardTitle()` picks the card's title column, `Column::hideOnCards()` leaves a column out of the card.
+
 ## [1.6.1] - 2026-10-16
 
 ### Fixed

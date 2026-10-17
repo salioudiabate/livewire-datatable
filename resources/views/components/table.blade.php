@@ -1,11 +1,12 @@
 <div
-    class="dt-root {{ $this->rootClasses() }}"
+    class="dt-root {{ $this->mobileCards() ? 'dt-cards' : '' }} {{ $this->rootClasses() }}"
     x-data="{ filtersOpen: @js($this->filtersDefaultOpen()) }"
     @if ($this->pollInterval())
         wire:poll.{{ $this->pollInterval() }}ms="$refresh"
     @endif
 >
     @include('livewire-datatable::components.theme-style')
+    @include('livewire-datatable::components.mobile-cards-style')
     @include('livewire-datatable::components.offline-banner')
 
     @include('livewire-datatable::components.toolbar', ['filters' => $filters])
@@ -27,7 +28,7 @@
     @include('livewire-datatable::components.selection-banner')
 
     <div
-        class="{{ $this->tableWrapperClasses() }}"
+        class="dt-table-wrapper {{ $this->tableWrapperClasses() }}"
         @if ($this->stickyHeader())
             style="{{ $this->stickyHeaderWrapperStyle() }}"
         @endif

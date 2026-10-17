@@ -58,6 +58,7 @@ class UsersTable extends DataTableComponent
 - [Row density](#row-density)
 - [Frozen columns](#frozen-columns)
 - [Sticky header](#sticky-header)
+- [Cards on phones](#cards-on-phones)
 - [Footer](#footer)
 - [Export](#export)
 - [Row actions](#row-actions)
@@ -632,6 +633,20 @@ protected function stickyHeaderMaxHeight(): string
 ```
 
 Combines correctly with frozen columns — a column that's both frozen and in a sticky header gets both `position: sticky` offsets (`left` and `top`) at once, not one replacing the other.
+
+## Cards on phones
+
+Below 640px each row is shown as a card instead of a table row that scrolls sideways: the first column is
+the card's title, every other cell reads "label … value", the selection checkbox and the row-actions menu
+sit in the card's corners. Nothing to change in your tables; it is pure CSS on the same markup.
+
+```php
+Column::make('Student', 'student_id')->cardTitle(),   // the card's title instead of the first column
+Column::make('Created', 'created_at')->hideOnCards(), // left out of the card to keep it short
+```
+
+Turn it off or move the breakpoint globally (`mobile_cards`, `mobile_cards_breakpoint` in the config) or per
+table by overriding `mobileCards(): bool` / `mobileCardsBreakpoint(): int`.
 
 ## Footer
 

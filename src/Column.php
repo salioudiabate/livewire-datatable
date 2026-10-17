@@ -43,6 +43,10 @@ final class Column
 
     private bool $frozen = false;
 
+    private bool $cardTitle = false;
+
+    private bool $hiddenOnCards = false;
+
     private ?int $width = null;
 
     private ?int $badgesVisible = null;
@@ -222,6 +226,36 @@ final class Column
         $this->width = $width;
 
         return $this;
+    }
+
+    /**
+     * On a phone (HasMobileCards), this column is the card's title instead of the first column.
+     */
+    public function cardTitle(): static
+    {
+        $this->cardTitle = true;
+
+        return $this;
+    }
+
+    /**
+     * On a phone (HasMobileCards), leaves this column out of the card to keep it short.
+     */
+    public function hideOnCards(): static
+    {
+        $this->hiddenOnCards = true;
+
+        return $this;
+    }
+
+    public function isCardTitle(): bool
+    {
+        return $this->cardTitle;
+    }
+
+    public function isHiddenOnCards(): bool
+    {
+        return $this->hiddenOnCards;
     }
 
     public function getLabel(): string

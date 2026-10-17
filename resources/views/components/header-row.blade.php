@@ -8,6 +8,7 @@
             $checkboxStyle = trim(($this->frozenCheckboxStyle($columns) ?? '').' '.$stickyHeaderStyle);
         @endphp
         <th
+            data-dt-cell="checkbox"
             class="{{ trim($this->thClasses().' '.$this->densityThClasses().' w-px '.(($this->hasFrozenColumns($columns) || $stickyHeaderActive) ? $this->frozenTheadBackgroundClass() : '')) }}"
             @if ($checkboxStyle !== '') style="{{ $checkboxStyle }}" @endif
         >

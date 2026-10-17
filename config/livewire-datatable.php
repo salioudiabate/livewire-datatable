@@ -45,6 +45,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Cards on phones
+    |--------------------------------------------------------------------------
+    |
+    | Below mobile_cards_breakpoint pixels, each row is shown as a card (title,
+    | then "label: value" lines) instead of a table row that scrolls sideways.
+    | Override mobileCards() / mobileCardsBreakpoint() on a table to change it.
+    |
+    */
+
+    'mobile_cards' => true,
+
+    'mobile_cards_breakpoint' => 640,
+
+    /*
+    |--------------------------------------------------------------------------
     | Density toggle & refresh event
     |--------------------------------------------------------------------------
     |

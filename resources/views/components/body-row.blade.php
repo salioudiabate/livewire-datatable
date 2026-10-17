@@ -1,4 +1,5 @@
 @php($rowUrl = $this->rowUrl($row))
+@php($cardTitle = $this->cardTitleColumn($columns))
 <tr
     class="{{ trim($this->tbodyTrClasses().' '.($rowUrl ? 'cursor-pointer' : '')) }}"
     wire:key="dt-row-{{ data_get($row, 'id') ?? $loop->index }}"
@@ -9,6 +10,7 @@
     @if (count($this->authorizedBulkActions()) > 0)
         @php($rowKey = $this->resolveRowKey($row))
         <td
+            data-dt-cell="checkbox"
             class="{{ trim($this->tdClasses().' '.$this->densityTdClasses().' '.($this->hasFrozenColumns($columns) ? $this->frozenTbodyBackgroundClass() : '')) }}"
             @if ($style = $this->frozenCheckboxStyle($columns)) style="{{ $style }}" @endif
         >
@@ -24,6 +26,8 @@
 
     @foreach ($columns as $column)
         <td
+            data-label="{{ $column->getLabel() }}"
+            @if ($column === $cardTitle) data-dt-cell="title" @elseif ($column->isHiddenOnCards()) data-dt-card-hidden @endif
             class="{{ trim($this->tdClasses().' '.$this->densityTdClasses().' '.$column->getTdClass().' '.($column->isFrozen() ? $this->frozenTbodyBackgroundClass().' '.$this->frozenRightEdgeClass($column, $columns) : '')) }}"
             @if ($style = $this->frozenColumnStyle($column, $columns)) style="{{ $style }}" @endif
         >
@@ -36,7 +40,7 @@
     @endforeach
 
     @if (count($this->rowActions()) > 0)
-        <td class="{{ trim($this->tdClasses().' '.$this->densityTdClasses()) }}">
+        <td data-dt-cell="actions" class="{{ trim($this->tdClasses().' '.$this->densityTdClasses()) }}">
             @include('livewire-datatable::row-actions.dropdown', [
                 'actions' => $this->visibleRowActions($row),
                 'row' => $row,
