@@ -151,3 +151,21 @@ it('narrows allFilteredKeys() to whatever search/filters are currently active, s
     // "Post 1", "Post 10".."Post 15" all match the substring "Post 1".
     expect($component->allFilteredKeys())->toHaveCount(7);
 });
+
+it('runs the page query and its count only once per render, even on a checkbox click', function () {
+    $test = Livewire::test(DeletablePostsTable::class);
+
+    $queries = [];
+    DB::listen(function ($query) use (&$queries) {
+        if (str_contains($query->sql, 'dt_test_posts')) {
+            $queries[] = $query->sql;
+        }
+    });
+
+    $test->set('selected', ['1', '2']);
+
+    $counts = array_filter($queries, fn (string $sql) => str_contains($sql, 'count(*)'));
+    $pages = array_filter($queries, fn (string $sql) => ! str_contains($sql, 'count(*)'));
+
+    expect($counts)->toHaveCount(1)->and($pages)->toHaveCount(1);
+});

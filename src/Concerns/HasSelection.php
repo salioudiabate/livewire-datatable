@@ -97,7 +97,10 @@ trait HasSelection
 
     public function isAllFilteredSelected(): bool
     {
-        $total = $this->filteredDataSource()->count();
+        // The paginator already counted every filtered row for this request
+        // (rows is #[Computed]): reuse it instead of a fresh count query —
+        // this runs on every checkbox click and up to twice per render.
+        $total = $this->rows->total();
 
         return $total > 0 && count($this->selected) === $total;
     }

@@ -50,8 +50,10 @@ trait HandlesRenderErrors
             // during Livewire's own rendering pass — outside this method
             // entirely, and therefore outside any try/catch it could have.
             // The memoized result is simply reused when the view accesses
-            // $this->rows below.
-            $this->rows();
+            // $this->rows below — which only holds when it is read as a
+            // property: calling rows() as a method bypasses #[Computed] and
+            // would run the page query (and its count) a second time.
+            $this->rows;
 
             return ViewFactory::make('livewire-datatable::components.table', [
                 'columns' => $columns,
