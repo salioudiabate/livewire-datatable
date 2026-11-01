@@ -29,6 +29,11 @@ trait HandlesRenderErrors
      */
     abstract public function filters(): array;
 
+    /**
+     * @return array<int, FilterContract>
+     */
+    abstract protected function resolvedFilters(): array;
+
     abstract public function rows(): mixed;
 
     /**
@@ -40,7 +45,7 @@ trait HandlesRenderErrors
     {
         try {
             $columns = $this->visibleColumns();
-            $filters = $this->filters();
+            $filters = $this->resolvedFilters();
 
             $this->assertValidFrozenColumns($columns);
 

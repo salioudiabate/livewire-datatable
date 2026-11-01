@@ -25,7 +25,28 @@ trait HasFilters
      */
     public array $filterSearchTerms = [];
 
+    /**
+     * filters() for the current request only (never dehydrated: private).
+     *
+     * @var array<int, FilterContract>|null
+     */
+    private ?array $resolvedFilters = null;
+
     abstract protected function onTableStateChanged(): void;
+
+    /**
+     * filters() built once per request: a filter's options often come from
+     * the database (a list of classes, of users…), and filters() is needed by
+     * the toolbar badge, the panel and applyFiltersTo() within one render.
+     * Built lazily, after the request's updates, so dependent options still
+     * see the new filter values.
+     *
+     * @return array<int, FilterContract>
+     */
+    protected function resolvedFilters(): array
+    {
+        return $this->resolvedFilters ??= $this->filters();
+    }
 
     /**
      * @return array<int, FilterContract>
@@ -60,7 +81,7 @@ trait HasFilters
     public function activeFilterCount(): int
     {
         return count(array_filter(
-            $this->filters(),
+            $this->resolvedFilters(),
             fn (FilterContract $filter) => $filter->isActive($this->filterValues)
         ));
     }
@@ -72,7 +93,7 @@ trait HasFilters
 
     protected function applyFiltersTo(DataSource $dataSource): DataSource
     {
-        foreach ($this->filters() as $filter) {
+        foreach ($this->resolvedFilters() as $filter) {
             if ($filter->isActive($this->filterValues)) {
                 $dataSource = $filter->apply($dataSource, $this->filterValues);
             }

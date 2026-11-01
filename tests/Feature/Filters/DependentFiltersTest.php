@@ -62,3 +62,22 @@ it('supports country -> town cascading filters via filters() reading state plus 
         ->and($test->html())->toContain('Abidjan')
         ->and($test->html())->not->toContain('Paris');
 });
+
+it('builds filters() once per request, however many times the table needs them', function () {
+    $table = new class extends PostsTable
+    {
+        public static int $calls = 0;
+
+        public function filters(): array
+        {
+            self::$calls++;
+
+            return parent::filters();
+        }
+    };
+
+    Livewire::test($table::class)->set('filterValues.status', 'draft');
+
+    // Mount render + update render: once each.
+    expect($table::$calls)->toBe(2);
+});
